@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+<style>
+{% block css %}
+#registration_form label{ display: none;}
+{% endblock %}
+</style>
+
+
+{% block content %}
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3">
+		<h1>Register a New Account</h1>
+		<hr />
+		<form action="{% url 'register' %}" method="POST" id="registration_form"> {% csrf_token %}
+			{{ form|crispy }}
+			<input type="submit" value="Create Free Account" class="btn btn-success">
+		</form>
+	</div>
+</div>
+{% endblock %}

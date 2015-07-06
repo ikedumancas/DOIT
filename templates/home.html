@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+<style>
+{% block css %}
+label.control-label {
+	display: none;
+}
+.navbar-static-top {
+	margin-bottom: 0px;
+}
+#register_login_tabs .panel{
+	border-top: 0;
+  	border-radius: 0 4px 4px 4px;
+}
+{% endblock %}
+</style>
+
+<script>
+$(document).ready(function(){
+{% block js %}
+
+{% endblock %}
+});
+</script>
+{% block jumbotron %}
+<div class="jumbotron">
+	<div class="container-fluid">
+		
+			<div class="col-sm-8">
+				<h1>Welcome!</h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati corporis molestias itaque facere eum laboriosam similique quis repellendus, velit voluptatem, nostrum quibusdam, nihil, distinctio ducimus veritatis enim quaerat soluta necessitatibus.</p>
+			</div>
+			<div class="col-sm-4" id="register_login_tabs">
+				<div role="tabpanel">
+					<ul class="nav nav-tabs nav-justified" role="tablist">
+						<li role="presentation" class="active"><a href="#register" aria-controls="register" role="tab" data-toggle="tab">Register</a></li>
+						<li role="presentation"><a href="#login" aria-controls="login" role="tab" data-toggle="tab">Login</a></li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="register">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<form action="{% url 'register' %}" method="POST"> {% csrf_token %}
+										{{ register_form|crispy }}
+										<input type="submit" value="Register" class="btn btn-success btn-block">
+									</form>
+								</div>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="login">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<form action="{% url 'login' %}" method="POST"> {% csrf_token %}
+										{{ login_form|crispy }}
+										<input type="submit" value="Login" class="btn btn-primary btn-block">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+	</div>
+</div>
+{% endblock %}
+{% block content %}
+
+{% endblock %}
+

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load humanize %} 
+{% load crispy_forms_tags %}
+
+
+
+<style>
+{% block css %}
+
+{% endblock %}
+</style>
+
+
+
+<script>
+$(document).ready(function(){
+{% block js %}
+
+{% endblock %}
+});
+</script>
+
+
+{% block content %}
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+			<form action="" method="POST">{% csrf_token %}
+				{% for input in form  %}
+					{% if input == form.order %}
+						<div id="div_id_order" class="form-group">
+							<label for="id_order" class="control-label  requiredField">
+								Order<span class="asteriskField">*</span>
+							</label>
+							<div class="controls ">
+								<select class="select form-control" id="id_order" name="order">
+
+								{% for order in list_orders %}
+									{% if input.value == order %}
+										<option value="{{ order }}" selected="selected">{{order|ordinal}}</option>
+									{% else %}
+										<option value="{{ order }}">{{order|ordinal}}</option>
+									{% endif %}
+								{% endfor %}
+								</select>
+							</div>
+						</div>
+					{% else %}
+					{{ input|as_crispy_field }}
+					{% endif %}
+				{% endfor %}
+				{# {{ form|crispy }} #}
+				<input type="submit" value="Save" class="btn btn-primary btn-block">
+			</form>
+		</div>
+	</div>
+{% endblock %}
+

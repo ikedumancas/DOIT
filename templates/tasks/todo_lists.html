@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+<style>
+{% block css %}
+#lists-container > div {
+	display: none;
+	width: 420px;
+  	float: left;
+}
+.todolist .panel-heading {
+	background-color: #fff;
+	border-bottom: 1px solid transparent;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	color: #797979;
+	padding: 10px 15px;
+}
+.todolist .panel-body {
+	padding: 15px;
+}
+.todolist .panel-body ul.list-group {
+	min-height: 25px;
+}
+.todolist .panel-body ul.list-group li.list-group-item {
+	background-color: #F8F8F8;
+	border: 0;
+	border-radius: 0;
+	margin-bottom: 3px;
+}
+.todolist .panel-body ul.list-group li.list-group-item:hover {
+	background-color: #FDFDFD;
+  	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+}
+.task-done {
+	background-color: #777777 !important;
+  	color: white;
+}
+.task-done .todo-title .todo-title-text {
+	text-decoration: line-through;
+}
+{% endblock %}
+</style>
+
+
+
+{% block jsfiles %}
+<script src="{% static 'js/doit.js' %}"></script>    
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="row" id="lists-container">
+	{% for list in todolists %}
+	<div class="todolist-panel">
+		<div class="panel panel-default todolist pn">
+		  	<div class="panel-heading">
+				<h5 class="panel-title">
+					<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <span class="panel-title-text">{{ list.title }}</span>
+					<span class="pull-right">
+						<a href="" class="list-btn btn btn-success btn-xs glyphicon glyphicon-user" title="Users"></a>
+						<a href="" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
+						<a href="" class="list-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive List"></a>
+					</span>
+				</h5>
+		  	</div>
+		  	<div class="panel-body">
+				<ul class="list-group" data-list-id="{{ list.slug }}">
+					{% for todo in list.todo_set.all %}
+					<li class="list-group-item {% if todo.status == 'done' %}task-done{% endif %}" data-task-id="{{ todo.slug }}">
+						<div style="width:25px" class="glyphicon glyphicon-move pull-left"></div>
+						<div style="width:92%" class="todo-title pull-left">
+							<span class="todo-title-text">{{ todo.title }}</span>
+							{% if todo.due_date and todo.status != 'done'  %}
+								{{ todo.due_date_status_badge }}
+							{% endif %}
+							<span class="pull-right">
+								{% if todo.status = 'done' %}
+								<a href="{% url 'task_undone' task_slug=todo.slug %}" class="task-btn btn btn-success btn-xs glyphicon glyphicon-ok" title="Unmark"></a>
+								{% else %}
+								<a href="{% url 'task_done' task_slug=todo.slug %}" class="task-btn btn btn-default btn-xs glyphicon glyphicon-ok" title="Mark as Done"></a>
+								{% endif %}
+								<a href="{% url 'task_edit' task_slug=todo.slug %}" class="task-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
+								<a href="{% url 'task_archive' task_slug=todo.slug %}" class="task-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive"></a>
+							</span>
+						</div>
+						<div class="clearfix"></div>
+					</li>
+					{% endfor %}
+				</ul>
+				<form action="{% url 'task_create' %}" method="POST" class='quick_task_form'> {% csrf_token %}
+					{{ todo_form.title|as_crispy_field }}
+					<input type="hidden" name="todolist" value="{{ list.slug }}" />
+				</form>
+		  	</div>
+		</div>
+	</div>
+	{% endfor %}
+	<div class="todolist-panel" id="create_list_panel">
+		<div class="panel panel-default todolist pn darkblue-panel">
+			<div class="panel-body">
+				<form action="{% url 'list_create' %}" method="POST" id="quick_list_form"> {% csrf_token %}
+				   	{{ list_form|crispy }}
+			   </form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="clone-list" style="display:none">
+	<div class="todolist-panel">
+		<div class="panel panel-default todolist pn">
+		  	<div class="panel-heading">
+				<h5 class="panel-title">
+					<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <span class="panel-title-text"></span>
+					<span class="pull-right">
+						<a href="" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
+						<a href="" class="list-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive List"></a>
+					</span>
+				</h5>
+		  	</div>
+		  	<div class="panel-body">
+				<ul class="list-group" data-list-id=""></ul>
+				<form action="{% url 'task_create' %}" method="POST" class='quick_task_form'> {% csrf_token %}
+					{{ todo_form.title|as_crispy_field }}
+					<input type="hidden" name="todolist" value="" />
+				</form>
+		  	</div>
+		</div>
+	</div>
+</div>
+<div class="clone-task" style="display:none">
+	<li class="list-group-item" data-task-id="">
+		<div style="width:25px" class="glyphicon glyphicon-move pull-left"></div>
+		<div style="width:92%" class="todo-title pull-left">
+			<span class="todo-title-text"></span>
+			<span class="pull-right">
+				<a href="" class="task-btn btn btn-default btn-xs glyphicon glyphicon-ok" title="Mark as Done"></a>
+				<a href="" class="task-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
+				<a href="" class="task-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive"></a>
+			</span>
+		</div>
+		<div class="clearfix"></div>
+	</li>
+</div>
+{% endblock %}
+
