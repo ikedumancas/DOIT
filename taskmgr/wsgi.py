@@ -12,5 +12,8 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "taskmgr.settings")
-
-application = get_wsgi_application()
+if os.environ.get('HEROKU_ENV') is not None:
+	from dj_static import Cling
+	application = Cling(get_wsgi_application())
+else:
+	application = get_wsgi_application()
