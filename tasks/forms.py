@@ -1,7 +1,13 @@
 
 from django import forms
 
-from .models import Todo, TodoList
+from .models import Todo
+
+
+class ListReorderForm(forms.Form):
+	order = forms.IntegerField(min_value=1)
+	task_slug = forms.CharField(max_length=15)
+
 
 class ListForm(forms.Form):
 	title = forms.CharField(

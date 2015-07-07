@@ -14,6 +14,7 @@ urlpatterns = [
     # Tasks url
     url(r'^$', 'tasks.views.home', name='home'),
     url(r'^todolist/create$', 'tasks.views.list_create', name='list_create'),
+    url(r'^todolist/reaorder/$', 'tasks.views.todo_ajax_reorder', name='todo_ajax_reorder'),
     url(r'^todo/create$', 'tasks.views.task_create', name='task_create'),
     url(r'^todo/edit/(?P<task_slug>[\w-]+)/$', 'tasks.views.task_edit', name='task_edit'),
     url(r'^todo/done/(?P<task_slug>[\w-]+)/$', 'tasks.views.task_done', name='task_done'),

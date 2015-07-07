@@ -1,10 +1,8 @@
 import datetime
-from django.contrib import humanize
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.template.defaultfilters import mark_safe
-from django.utils import timezone
 from django.utils.crypto import get_random_string
 # Create your models here.
 

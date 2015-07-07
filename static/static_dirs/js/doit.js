@@ -2,6 +2,7 @@ var LIST = $('#lists-container > div')
 var LIST_CONTAINER = $('#lists-container')
 var LIST_TO_CLONE = $('.clone-list .todolist-panel')
 var LI_ITEM_TO_CLONE = $('.clone-task .list-group-item')
+var csrf_token = $('body').find('input[name=csrfmiddlewaretoken]').val()
 function create_task(form){
 	csrf_token = $(form).find('input[name=csrfmiddlewaretoken]').val()
 	todolist = $(form).find('input[name=todolist]').val()
@@ -52,10 +53,11 @@ function create_list(form){
 		error: function(xhr,errmsg,err) {
 			$.gritter.add({
 				title: 'Oops! Something went wrong.',
-				text: xhr.status + ": " + xhr.responseText,
 				sticky: false,
 				time: ''
 			});
+			console.log(errmsg)
+			console.log(xhr.status + ": " + xhr.responseText)
 		}
 	});
 }
@@ -95,6 +97,7 @@ $(document).ready(function(){
 				sticky: false,
 				time: ''
 			});
+			console.log(errmsg)
 			console.log(xhr.status + ": " + xhr.responseText)
 		}
 	});
@@ -111,17 +114,26 @@ $(document).ready(function(){
 	});
 	// make tasks in todolist sortable
 	$('.todolist .list-group').sortable({
-		start: function(event, ui) {
-			var start_pos = ui.item.index() + 1;
-			ui.item.data('start_pos', start_pos);
-		},
 		update: function(event, ui) {
-			var start_pos = ui.item.data('start_pos');
-			var end_pos = ui.item.index() + 1;
-			// start_pos  end_pos;
-			console.log('Start Pos:' + start_pos)
-			console.log('End Pos:' + end_pos)
-
+			var slug = $(ui.item).data('task-id')
+			var new_order = ui.item.index() + 1;
+			$.ajax({
+				url: REORDER_URL,
+				type: 'POST',
+				data: { csrfmiddlewaretoken: csrf_token, task_slug: slug, order:new_order  },
+				success: function(json) {
+					console.log('List Reordered');
+				},
+				error: function(xhr,errmsg,err) {
+					$.gritter.add({
+						title: 'Oops! Something went wrong.',
+						sticky: false,
+						time: ''
+					});
+					console.log(errmsg)
+					console.log(xhr.status + ": " + xhr.responseText)
+				}
+			});
 		}
 	}).disableSelection();
 

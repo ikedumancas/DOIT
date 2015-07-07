@@ -2,20 +2,20 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404, Http404, HttpResponseRedirect, redirect, render
+from django.shortcuts import get_object_or_404, Http404, redirect, render
 
 from .models import TodoList, Todo
-from .forms import FullTodoForm, ListForm, NoListFullTodoForm, TaskForm
+from .forms import FullTodoForm, ListForm, ListReorderForm, NoListFullTodoForm, TaskForm
 from account.forms import LoginForm, RegisterForm
 
-# Create your views here.
+
 def home(request):
 	if request.user.is_authenticated():
 		list_form = ListForm()
 		todo_form = TaskForm()
 		user = request.user
 		user_todo_lists = user.todolist_set.all()
-		
+
 		context = {
 			"todolists":user_todo_lists,
 			"list_form":list_form,
@@ -55,6 +55,7 @@ def list_create(request):
 				new_list = TodoList.objects.create_list(user=request.user, title=list_title)
 				return redirect('home')
 
+
 @login_required
 def task_create(request):
 	if request.method == "POST":
@@ -84,12 +85,13 @@ def task_create(request):
 					new_list = Todo.objects.create_todo(user=request.user, title=task_title, list_slug=list_slug)
 				return redirect('home')
 
+
 @login_required
 def task_edit(request, task_slug):
 	task = get_object_or_404(Todo, slug=task_slug)
 
 	list_users = task.todolist.users.all()
-	if not request.user in list_users:
+	if request.user not in list_users:
 		raise Http404
 
 	old_task = get_object_or_404(Todo, slug=task_slug)
@@ -163,6 +165,7 @@ def task_edit(request, task_slug):
 	template = "tasks/task_edit_form.html"
 	return render(request, template, context)
 
+
 @login_required
 def task_done(request, task_slug):
 	task = get_object_or_404(Todo, slug=task_slug)
@@ -182,12 +185,13 @@ def task_done(request, task_slug):
 		)		
 	return redirect('home')
 
+
 @login_required
 def task_undone(request, task_slug):
 	task = get_object_or_404(Todo, slug=task_slug)
 
 	list_users = task.todolist.users.all()
-	if not request.user in list_users:
+	if request.user not in list_users:
 		raise Http404
 
 	task.mark_as_active()
@@ -201,12 +205,13 @@ def task_undone(request, task_slug):
 		)
 	return redirect('home')
 
+
 @login_required
 def task_archive(request, task_slug):
 	task = get_object_or_404(Todo, slug=task_slug)
 
 	list_users = task.todolist.users.all()
-	if not request.user in list_users:
+	if request.user not in list_users:
 		raise Http404
 
 	task.mark_as_archived()
@@ -219,30 +224,47 @@ def task_archive(request, task_slug):
 		)
 	return redirect('home')
 
+
 @login_required
-def reorder(request):
-	# Reordering
-	reorder = False
-	if old_task.order > form.cleaned_data['order']:
-		tasks_to_change_order = task.todolist.todo_set.filter(
-			order__gte = form.cleaned_data['order'], 
-			order__lte = old_task.order
-			).exclude(id=task.id)
-		old_order_gte_new_order = True
-		reorder = True
-	elif old_task.order < form.cleaned_data['order']:
-		tasks_to_change_order = task.todolist.todo_set.filter(
-			order__lte = form.cleaned_data['order'], 
-			order__gte = old_task.order
-			).exclude(id=task.id)
-		old_order_gte_new_order = False
-		reorder = True
-	else:
-		pass
-	if reorder:
+def todo_ajax_reorder(request):
+	form = ListReorderForm(request.POST)
+	if form.is_valid():
+		task_slug = form.cleaned_data['task_slug']
+		task = get_object_or_404(Todo, slug=task_slug)
+
+		list_users = task.todolist.users.all()
+		if request.user not in list_users:
+			raise Http404
+
+		old_order = task.order
+		new_order = form.cleaned_data['order']
+		task.order = new_order
+		task.save()
+		if old_order > new_order:
+			tasks_to_change_order = task.todolist.todo_set.filter(
+				order__gte = new_order, 
+				order__lte = old_order
+				).exclude(id=task.id)
+			old_order_gte_new_order = True
+		elif old_order < new_order:
+			tasks_to_change_order = task.todolist.todo_set.filter(
+				order__lte = new_order, 
+				order__gte = old_order
+				).exclude(id=task.id)
+			old_order_gte_new_order = False
+		else:
+			pass
+
 		for change_order in tasks_to_change_order:
 			if old_order_gte_new_order:
 				change_order.order = change_order.order + 1
 			else:
 				change_order.order = change_order.order -1
 			change_order.save()
+
+		response_data = {}
+		response_data['result'] = 'reordered'
+		return HttpResponse(
+			json.dumps(response_data),
+			content_type="application/json"
+			)
