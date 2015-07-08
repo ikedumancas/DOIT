@@ -12,5 +12,8 @@ class TodoAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'todolist', 'due_date', 'order', 'status')
 
 
+class TodoListAdmin(admin.ModelAdmin):
+	list_display = ('__unicode__', 'updated')
+
 admin.site.register(Todo,TodoAdmin)
-admin.site.register(TodoList)
+admin.site.register(TodoList, TodoListAdmin)

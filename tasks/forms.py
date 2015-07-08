@@ -28,14 +28,9 @@ class FullTodoForm(forms.ModelForm):
 		help_text = 'Format: YYYY-MM-DD',
 		required = False
 		)
-	subscribe_user = forms.BooleanField(
-		help_text='Note: Check this field if you want to be notified when other users make changes on this task.',
-		label='Subscribe',
-		required=False
-		)
 	class Meta:
 		model = Todo
-		fields = ['todolist','title', 'description', 'order', 'status', 'due_date', 'subscribe_user']
+		fields = ['todolist','title', 'description', 'order', 'status', 'due_date']
 		labels = {
 			'todolist':'List'
 		}
@@ -47,4 +42,4 @@ This form will not allow other users to transfer Tasks to other TodoList.
 class NoListFullTodoForm(FullTodoForm):
 	class Meta:
 		model = Todo
-		fields = ['title', 'description', 'order', 'status', 'due_date', 'subscribe_user']
+		fields = ['title', 'description', 'order', 'status', 'due_date']

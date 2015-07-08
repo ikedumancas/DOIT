@@ -38,9 +38,8 @@ class TodoManager(models.Manager):
 
 class Todo(models.Model):
 	todolist = models.ForeignKey('TodoList', default=1)
-	subscribed_users = models.ManyToManyField(User)
 	title = models.CharField(max_length=1000)
-	order = models.PositiveIntegerField(default=1)
+	order = models.PositiveIntegerField(default=1, blank=True, null=True)
 	slug = models.SlugField(max_length=10, blank=True, null=True)
 	status = models.SlugField(choices=STATUS_CHOICES, default='active', max_length=10)
 	description = models.TextField(max_length=5000, null=True, blank=True)
@@ -50,39 +49,58 @@ class Todo(models.Model):
 
 	objects = TodoManager()
 
+	
 	class Meta:
 		verbose_name = "Task"
 		verbose_name_plural = "Tasks"
 		ordering = ['order','timestamp']
 
+	
 	def __unicode__(self):
 		return self.title
 
+
+	def change_order_to(self,new):
+		old_order = self.order
+		new_order = new
+		self.order = new_order
+		if old_order > new_order:
+			tasks_to_change_order = self.todolist.todo_set.filter(
+				order__gte = new_order, 
+				order__lte = old_order
+				).exclude(id=self.id)
+			old_order_gte_new_order = True
+		elif old_order < new_order:
+			tasks_to_change_order = self.todolist.todo_set.filter(
+				order__lte = new_order, 
+				order__gte = old_order
+				).exclude(id=self.id)
+			old_order_gte_new_order = False
+		for change_order in tasks_to_change_order:
+			if old_order_gte_new_order:
+				change_order.order = change_order.order + 1
+			else:
+				change_order.order = change_order.order -1
+			change_order.save()
+		self.save()
+
+	
 	def mark_as_active(self):
 		self.status = 'active'
 		self.save()
 
+	
 	def mark_as_archived(self):
 		self.status = 'archived'
+		self.order = ''
 		self.save()
 
+	
 	def mark_as_done(self):
 		self.status = 'done'
 		self.save()
 
-	def subcribe_user(self, user):
-		try:
-			self.subscribed_users.add(user)
-			return True
-		except:
-			return False
-	def unsubcribe_user(self, user):
-		try:
-			self.subscribed_users.remove(user)
-			return True
-		except:
-			return False
-
+	
 	def due_date_status_badge(self):
 		color = 'default'
 		overdue = ''
@@ -115,7 +133,6 @@ class Todo(models.Model):
 
 			return mark_safe('<span class="label label-%s"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> %s %s</span>' %(color, days_from_due_date_string, overdue))
 		return ''
-		
 
 
 
@@ -123,6 +140,7 @@ class TodoListManager(models.Manager):
 	def all(self):
 		return super(TodoListManager,self).exclude(status='archived')
 
+	
 	def create_list(self, user=None, title=None):
 		if not user:
 			raise ValueError('Must include a User when adding a new list')
@@ -146,6 +164,7 @@ class TodoList(models.Model):
 
 	objects = TodoListManager()
 
+	
 	class Meta:
 		verbose_name = "Todo List"
 		verbose_name_plural = "Todo Lists"
@@ -154,6 +173,7 @@ class TodoList(models.Model):
 
 	def __unicode__(self):
 		return self.title
+	
 	
 	def task_count(self):
 		return len(self.todo_set.all())
@@ -170,5 +190,6 @@ def todo_post_save_receiver(sender, instance, created, *args, **kwargs):
 		instance.order = new_order_num
 		instance.save()
 	instance.todolist.save() # Save the Todolist to change its update datetime.
+	# Notify users on the list if an action was made. Except for the user who made the action.
 	
 post_save.connect(todo_post_save_receiver, sender=Todo)

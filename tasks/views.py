@@ -117,45 +117,18 @@ def task_edit(request, task_slug):
 			if task.todolist.creator == request.user:
 				task.todolist = form.cleaned_data['todolist']
 			
-			# Reordering
-			reorder = False
-			if old_task.order > form.cleaned_data['order']:
-				tasks_to_change_order = task.todolist.todo_set.filter(
-					order__gte = form.cleaned_data['order'], 
-					order__lte = old_task.order
-					).exclude(id=task.id)
-				old_order_gte_new_order = True
-				reorder = True
-			elif old_task.order < form.cleaned_data['order']:
-				tasks_to_change_order = task.todolist.todo_set.filter(
-					order__lte = form.cleaned_data['order'], 
-					order__gte = old_task.order
-					).exclude(id=task.id)
-				old_order_gte_new_order = False
-				reorder = True
-			else:
-				pass
-			if reorder:
-				for change_order in tasks_to_change_order:
-					if old_order_gte_new_order:
-						change_order.order = change_order.order + 1
-					else:
-						change_order.order = change_order.order -1
-					change_order.save()
+			old_order = old_task.order
+			new_order = form.cleaned_data['order']
+
+			if old_order != new_order:
+				old_task.change_order_to(new_order)
 
 			task.title = form.cleaned_data['title']
 			task.description = form.cleaned_data['description']
-			task.order = form.cleaned_data['order']
 			task.status = form.cleaned_data['status']
 			task.due_date = form.cleaned_data['due_date']
 			task.save()
 			
-			subscribe_user = form.cleaned_data['subscribe_user']
-			if subscribe_user:
-				task.subcribe_user(request.user)
-			else:
-				task.unsubcribe_user(request.user)
-			# full_path = request.get_full_path()
 			return redirect('home')
 
 	context = {
@@ -238,29 +211,16 @@ def todo_ajax_reorder(request):
 
 		old_order = task.order
 		new_order = form.cleaned_data['order']
-		task.order = new_order
-		task.save()
-		if old_order > new_order:
-			tasks_to_change_order = task.todolist.todo_set.filter(
-				order__gte = new_order, 
-				order__lte = old_order
-				).exclude(id=task.id)
-			old_order_gte_new_order = True
-		elif old_order < new_order:
-			tasks_to_change_order = task.todolist.todo_set.filter(
-				order__lte = new_order, 
-				order__gte = old_order
-				).exclude(id=task.id)
-			old_order_gte_new_order = False
-		else:
-			pass
 
-		for change_order in tasks_to_change_order:
-			if old_order_gte_new_order:
-				change_order.order = change_order.order + 1
-			else:
-				change_order.order = change_order.order -1
-			change_order.save()
+		if old_order != new_order:
+			task.change_order_to(new_order)
+		else:
+			response_data = {}
+			response_data['result'] = 'List is on the same order. Nothing changed.'
+			return HttpResponse(
+				json.dumps(response_data),
+				content_type="application/json"
+				)
 
 		response_data = {}
 		response_data['result'] = 'reordered'
