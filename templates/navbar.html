@@ -22,8 +22,7 @@
 				<li class="user-dropdown dropdown" id="user_dropdown">
 					<a href="#" class="user-toggle dropdown-toggle" data-toggle="dropdown" role="button" id="user_dropdown_toggler"><span class="glyphicon glyphicon-user" title="User"></span> {{ user }} <span class="caret"></span></a>
 					<ul class="dropdown-menu" id="user_dropdown_container">
-						<li><a href="">Account</a></li>
-						<li role="separator" class="divider"></li>
+						<li><a href="{% url 'account_edit' %}">Account</a></li>
 						<li><a href="{% url 'logout' %}">
 						Logout
 						</a></li>  

@@ -60,6 +60,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'taskmgr.middleware.TimezoneMiddleware',
 )
 
 ROOT_URLCONF = 'taskmgr.urls'
@@ -100,7 +101,7 @@ DATABASES = {
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-TIME_ZONE = 'Asia/Kuala_Lumpur'
+# TIME_ZONE = 'Asia/Kuala_Lumpur'
 
 USE_I18N = True
 

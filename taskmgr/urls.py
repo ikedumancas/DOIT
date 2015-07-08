@@ -7,6 +7,8 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     # Auth URL
+    url(r'^accounts/edit/$', 'account.views.auth_edit', name='account_edit'),
+    url(r'^accounts/changepassword/$', 'account.views.auth_changepassword', name='auth_changepassword'),
     url(r'^accounts/login/$', 'account.views.auth_login', name='login'),
     url(r'^accounts/logout/$', 'account.views.auth_logout', name='logout'),
     url(r'^accounts/register/$', 'account.views.auth_register', name='register'),

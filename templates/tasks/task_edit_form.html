@@ -15,7 +15,9 @@
 <script>
 $(document).ready(function(){
 {% block js %}
-
+$('#id_due_date').datepicker({
+	format: 'yyyy-mm-dd',
+})
 {% endblock %}
 });
 </script>

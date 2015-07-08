@@ -3,5 +3,7 @@ dj-static==0.0.6
 Django==1.8
 django-crispy-forms==1.4.0
 gunicorn==19.3.0
+pygeoip==0.3.2
+pytz==2015.4
 static3==0.6.1
 wheel==0.24.0

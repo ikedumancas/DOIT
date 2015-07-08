@@ -117,6 +117,8 @@ $(document).ready(function(){
 		update: function(event, ui) {
 			var slug = $(ui.item).data('task-id')
 			var new_order = ui.item.index() + 1;
+			console.log(slug)
+			console.log(new_order)
 			$.ajax({
 				url: REORDER_URL,
 				type: 'POST',
