@@ -2,13 +2,10 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 
-from tasks.models import TodoList
-
 # Create your models here.
 class UserProfile(models.Model):
     user      = models.OneToOneField(User)
     bio       = models.TextField(null=True, blank=True)
-    timezone = models.CharField(max_length=120,default = 'UTC')
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated   = models.DateTimeField(auto_now=True, auto_now_add=False)
 
