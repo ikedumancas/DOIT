@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # AUTH_USER_MODEL = 'accounts.MyUser'
 LOGIN_REDIRECT_URL = '/'
 FULL_DOMAIN_NAME = 'http://tskmgr.com'
-LOGIN_URL = '/login/'
+LOGIN_URL = '/accounts/login/'
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
@@ -100,8 +100,8 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-# TIME_ZONE = 'Asia/Kuala_Lumpur'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kuala_Lumpur'
 
 USE_I18N = True
 

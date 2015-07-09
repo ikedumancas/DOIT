@@ -157,6 +157,7 @@ class TodoListManager(models.Manager):
 			raise ValueError('Must include a Title when adding a new list')
 
 		new_list = self.model(title = title,slug=get_random_string(length=10))
+		new_list.creator = user
 		new_list.save(using=self._db)
 		new_list.users.add(user)
 		return new_list

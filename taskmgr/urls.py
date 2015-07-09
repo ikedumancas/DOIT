@@ -13,13 +13,14 @@ urlpatterns = [
     url(r'^accounts/logout/$', 'account.views.auth_logout', name='logout'),
     url(r'^accounts/register/$', 'account.views.auth_register', name='register'),
     
-    # Tasks url
+    # List url
     url(r'^$', 'tasks.views.home', name='home'),
     url(r'^todolist/create/$', 'tasks.views.list_create', name='list_create'),
-    # url(r'^todolist/(?P<list_slug>[\w-]+)/adduser/$', 'tasks.views.list_add_user', name='list_add_user'),
+    url(r'^todolist/(?P<list_slug>[\w-]+)/deluser/(?P<id>\d+)/$', 'tasks.views.list_delete_user', name='list_delete_user'),
     url(r'^todolist/(?P<list_slug>[\w-]+)/edit/$', 'tasks.views.list_edit', name='list_edit'),
     url(r'^todolist/(?P<list_slug>[\w-]+)/archive/$', 'tasks.views.list_archive', name='list_archive'),
     url(r'^todolist/reaorder/$', 'tasks.views.todo_ajax_reorder', name='todo_ajax_reorder'),
+    # Task url
     url(r'^todo/create/$', 'tasks.views.task_create', name='task_create'),
     url(r'^todo/(?P<task_slug>[\w-]+)/edit/$', 'tasks.views.task_edit', name='task_edit'),
     url(r'^todo/(?P<task_slug>[\w-]+)/done/$', 'tasks.views.task_done', name='task_done'),

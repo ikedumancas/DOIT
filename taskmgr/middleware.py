@@ -1,5 +1,6 @@
 import pygeoip
-
+import pytz
+from django.utils import timezone
 from django.conf import settings
 
 def get_client_ip(request):
