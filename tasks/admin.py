@@ -13,7 +13,7 @@ class TodoAdmin(admin.ModelAdmin):
 
 
 class TodoListAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'updated')
+	list_display = ('__unicode__', 'updated', 'status')
 
 admin.site.register(Todo,TodoAdmin)
 admin.site.register(TodoList, TodoListAdmin)

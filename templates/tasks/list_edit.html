@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+<style>
+{% block css %}
+li.list-group-item{
+	border-radius: 0 !important;
+}
+li.list-group-item:hover {
+	background-color: #F8F8F8;
+}
+{% endblock %}
+</style>
+
+<script>
+$(document).ready(function(){
+{% block js %}
+
+{% endblock %}
+});
+</script>
+
+{% block content %}
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3 panel panel-default pn">
+		<div class="panel-body">
+			<h3>Edit List</h3>
+			<form action="" method="POST">{% csrf_token %}
+				<div class="input-group">
+					{{ todolistForm|crispy }}
+					<span class="input-group-btn">
+						<input type="submit" value="Save Title" class="btn btn-primary form-control">
+					</span>
+				</div>
+			</form>
+			<hr/>
+			<h4>Users</h4>
+			<form action="" method="POST">{% csrf_token %}
+				<div class="input-group">
+					{{ adduserForm|crispy }}
+					<span class="input-group-btn">
+						<input type="submit" value="Add User" class="btn btn-primary form-control">
+					</span>
+				</div>
+			</form>
+			<br/>
+			<ul class="list-group">
+				{% for u in users %}
+					<li class="list-group-item ">
+						<span class="todo-title-text">
+							{% if u.userprofile.full_name != ', ' %}
+								{{u.userprofile.full_name}}
+							{% else %}
+								{{u.username}}
+							{% endif %}
+						</span>
+						<span class="pull-right">
+							<a href="" class="task-btn btn btn-danger btn-xs glyphicon glyphicon-remove" title="Remove this user"></a>
+						</span>
+					</li>	
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

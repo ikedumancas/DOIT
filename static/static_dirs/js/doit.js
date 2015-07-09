@@ -43,7 +43,6 @@ function create_list(form){
 			new_width = LIST_CONTAINER.width() + $('.todolist-panel').outerWidth();
 			LIST_CONTAINER.width(new_width);
 			append_this = LIST_TO_CLONE.clone()
-			append_this.find('.glyphicon-user').attr('href', json.users_url)
 			append_this.find('.glyphicon-pencil').attr('href', json.edit_url)
 			append_this.find('.glyphicon-trash').attr('href', json.archive_url)
 			append_this.find('.panel-title-text').html(json.title)

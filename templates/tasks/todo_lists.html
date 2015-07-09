@@ -2,49 +2,6 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 
-<style>
-{% block css %}
-#lists-container > div {
-	display: none;
-	width: 420px;
-  	float: left;
-}
-.todolist .panel-heading {
-	background-color: #fff;
-	border-bottom: 1px solid transparent;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
-	color: #797979;
-	padding: 10px 15px;
-}
-.todolist .panel-body {
-	padding: 15px;
-}
-.todolist .panel-body ul.list-group {
-	min-height: 25px;
-}
-.todolist .panel-body ul.list-group li.list-group-item {
-	background-color: #F8F8F8;
-	border: 0;
-	border-radius: 0;
-	margin-bottom: 3px;
-}
-.todolist .panel-body ul.list-group li.list-group-item:hover {
-	background-color: #FDFDFD;
-  	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
-}
-.task-done {
-	background-color: #777777 !important;
-  	color: white;
-}
-.task-done .todo-title .todo-title-text {
-	text-decoration: line-through;
-}
-{% endblock %}
-</style>
-
-
-
 {% block jsfiles %}
 <script src="{% static 'js/doit.js' %}"></script>    
 {% endblock %}
@@ -67,9 +24,10 @@ REORDER_URL = "{% url 'todo_ajax_reorder' %}"
 				<h5 class="panel-title">
 					<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <span class="panel-title-text">{{ list.title }}</span>
 					<span class="pull-right">
-						<a href="{% url 'list_users' list_slug=list.slug %}" class="list-btn btn btn-success btn-xs glyphicon glyphicon-user" title="Users"></a>
-						<a href="{% url 'list_edit' list_slug=list.slug %}" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
+						<a href="{% url 'list_edit' list_slug=list.slug %}" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit List"></a>
+						{% if list.creator == user %}
 						<a href="{% url 'list_archive' list_slug=list.slug %}" class="list-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive List"></a>
+						{% endif %}
 					</span>
 				</h5>
 		  	</div>
@@ -123,7 +81,6 @@ REORDER_URL = "{% url 'todo_ajax_reorder' %}"
 				<h5 class="panel-title">
 					<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <span class="panel-title-text"></span>
 					<span class="pull-right">
-						<a href="" class="list-btn btn btn-success btn-xs glyphicon glyphicon-user" title="Users"></a>
 						<a href="" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
 						<a href="" class="list-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive List"></a>
 					</span>

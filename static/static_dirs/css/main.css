@@ -1,4 +1,4 @@
-/*@import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);*/
+@import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
 body {
 	background-color: #F8F8F8;
 	color: #797979;
@@ -44,6 +44,9 @@ PANELS CONFIGURATIONS
 .pn:hover {
 	box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.3);
 	
+}
+.panel {
+	border-radius: 0;
 }
 
 /*Grey Panel*/
@@ -158,4 +161,43 @@ PANELS CONFIGURATIONS
 	color: #68dff0;
 	padding-right: 4px;
 	font-size: 14px;
+}
+#lists-container > div {
+	display: none;
+	width: 420px;
+  	float: left;
+}
+.todolist .panel-heading {
+	background-color: #fff;
+	border-bottom: 1px solid transparent;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	color: #797979;
+	padding: 10px 15px;
+}
+.todolist .panel-body {
+	padding: 15px;
+}
+.todolist .panel-body ul.list-group {
+	min-height: 25px;
+}
+.todolist .panel-body ul.list-group li.list-group-item {
+	background-color: #EFEFEF;
+	border: 0;
+	border-radius: 0;
+	margin-bottom: 3px;
+}
+.todolist .panel-body ul.list-group li.list-group-item:hover {
+	background-color: #FDFDFD;
+  	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+}
+.task-done {
+	background-color: #777777 !important;
+  	color: white;
+}
+.task-done:hover {
+	background-color: #646464 !important;
+}
+.task-done .todo-title .todo-title-text {
+	text-decoration: line-through;
 }

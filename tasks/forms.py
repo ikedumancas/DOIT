@@ -16,6 +16,29 @@ class ListForm(forms.Form):
 		help_text="Press [Enter] to create"
 		)
 
+class EditListForm(forms.Form):
+	title = forms.CharField(
+		widget=forms.TextInput(attrs={'placeholder': 'List Title','id':'list_title'}),
+		label = '',
+		)
+
+class AddUserToListForm(forms.Form):
+	username = forms.CharField(
+		widget=forms.TextInput(attrs={'placeholder': 'Type in Username of the User you want to add.','id':'add_user_to_list'}),
+		label = '',
+		)
+	def clean_username(self):
+		username = self.cleaned_data.get('username')
+		try:
+			exists = User.objects.get(username=username)
+			if exists:
+				raise forms.ValidationError("This usernam is taken")
+		except User.DoesNotExist:
+			return username
+		except:
+			raise forms.ValidationError(
+			    "There was an error, please try again or contact us.")
+
 class TaskForm(forms.Form):
 	title = forms.CharField(
 		widget=forms.TextInput(attrs={'placeholder': 'New Task', 'class':'create_quick_task'}),

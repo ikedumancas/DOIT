@@ -2,10 +2,10 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404, Http404, redirect, render
+from django.shortcuts import get_object_or_404, Http404, HttpResponseRedirect, redirect, render
 
 from .models import TodoList, Todo
-from .forms import FullTodoForm, ListForm, ListReorderForm, NoListFullTodoForm, TaskForm
+from .forms import AddUserToListForm,FullTodoForm, ListForm, ListReorderForm, NoListFullTodoForm, TaskForm, EditListForm
 from account.forms import LoginForm, RegisterForm
 
 
@@ -14,7 +14,7 @@ def home(request):
 		list_form = ListForm()
 		todo_form = TaskForm()
 		user = request.user
-		user_todo_lists = user.todolist_set.all()
+		user_todo_lists = user.lists.all()
 
 		context = {
 			"todolists":user_todo_lists,
@@ -46,7 +46,6 @@ def list_create(request):
 				response_data['title'] = new_list.title
 				response_data['slug'] = new_list.slug
 				response_data['edit_url'] = reverse('list_edit', kwargs={'list_slug': new_list.slug})
-				response_data['users_url'] = reverse('list_users', kwargs={'list_slug': new_list.slug})
 				response_data['archive_url'] = reverse('list_archive', kwargs={'list_slug': new_list.slug})
 				response_data['result'] = 'New list created!'
 				return HttpResponse(
@@ -60,15 +59,34 @@ def list_create(request):
 
 
 @login_required
-def list_edit(request):
-	context = {
+def list_edit(request,list_slug):
+	todolist = get_object_or_404(TodoList, slug=list_slug)
+	if request.user not in todolist.users.all():
+		raise Http404
 
+	users = todolist.users.exclude(id=request.user.id)
+	todolistForm = EditListForm(request.POST or None, initial={'title':todolist.title})
+	add_user_form = AddUserToListForm(None)
+	if request.method == 'POST':
+		if todolistForm.is_valid():
+			todolist.title = todolistForm.cleaned_data['title']
+			todolist.save()
+			return HttpResponseRedirect(request.get_full_path())
+
+	context = {
+		'todolistForm':todolistForm,
+		'adduserForm':add_user_form,
+		'users':users
 	}
-	template = "template.html"
+	template = "tasks/list_edit.html"
 	return render(request, template, context)
 
-
-def list_users(request):
+@login_required
+def list_add_user(request, list_slug):
+	todolist = get_object_or_404(TodoList, slug=list_slug)
+	if request.user not in todolist.users.all():
+		raise Http404
+	form = EditListForm(request.POST)
 	context = {
 
 	}
@@ -141,7 +159,7 @@ def task_edit(request, task_slug):
 	
 	if task.todolist.creator == request.user:
 		form = FullTodoForm(instance=task)
-		user_todo_lists = request.user.todolist_set.all()
+		user_todo_lists = request.user.lists.all()
 		form.fields['todolist'].queryset = user_todo_lists
 	else:
 		form = NoListFullTodoForm(instance=task)

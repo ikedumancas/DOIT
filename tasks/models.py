@@ -163,8 +163,8 @@ class TodoListManager(models.Manager):
 
 
 class TodoList(models.Model):
-	creator = models.ForeignKey(User, default=1,related_name='created_by')
-	users = models.ManyToManyField(User)
+	creator = models.ForeignKey(User, default=1,related_name='created_list')
+	users = models.ManyToManyField(User, related_name="lists")
 	title = models.CharField(max_length=120)
 	slug = models.SlugField(max_length=10, blank=True, null=True)
 	status = models.SlugField(choices=STATUS_CHOICES, default='active', max_length=10)

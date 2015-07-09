@@ -23,7 +23,10 @@ $('#id_due_date').datepicker({ dateFormat: "yy-mm-dd" }).val()
 
 {% block content %}
 	<div class="row">
-		<div class="col-sm-6 col-sm-offset-3">
+		<div class="col-sm-6 col-sm-offset-3 panel panel-default pn">
+			<div class="panel-body">
+			<h3>Edit Task</h3>
+			<hr/>
 			<form action="" method="POST">{% csrf_token %}
 				{% for input in form  %}
 					{% if input == form.order %}
@@ -51,6 +54,7 @@ $('#id_due_date').datepicker({ dateFormat: "yy-mm-dd" }).val()
 				{# {{ form|crispy }} #}
 				<input type="submit" value="Save" class="btn btn-primary btn-block">
 			</form>
+			</div>
 		</div>
 	</div>
 {% endblock %}
