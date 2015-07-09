@@ -1,5 +1,6 @@
 
 from django import forms
+from django.contrib.auth.models import User
 
 from .models import Todo
 
@@ -26,15 +27,19 @@ class AddUserToListForm(forms.Form):
 	username = forms.CharField(
 		widget=forms.TextInput(attrs={'placeholder': 'Type in Username of the User you want to add.','id':'add_user_to_list'}),
 		label = '',
+		required = False
 		)
+	
 	def clean_username(self):
 		username = self.cleaned_data.get('username')
+		if username == '':
+			return False
+
 		try:
-			exists = User.objects.get(username=username)
-			if exists:
-				raise forms.ValidationError("This usernam is taken")
+			user = User.objects.get(username=username)
+			return user
 		except User.DoesNotExist:
-			return username
+			raise forms.ValidationError("This username does not exist. Please input an existing username.")
 		except:
 			raise forms.ValidationError(
 			    "There was an error, please try again or contact us.")

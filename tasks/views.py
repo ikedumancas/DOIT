@@ -66,32 +66,37 @@ def list_edit(request,list_slug):
 
 	users = todolist.users.exclude(id=request.user.id)
 	todolistForm = EditListForm(request.POST or None, initial={'title':todolist.title})
-	add_user_form = AddUserToListForm(None)
+	add_user_form = AddUserToListForm(request.POST or None)
 	if request.method == 'POST':
-		if todolistForm.is_valid():
+		submit = request.POST.get('submit')
+		if todolistForm.is_valid() and submit == 'Save Title':
 			todolist.title = todolistForm.cleaned_data['title']
 			todolist.save()
+			return HttpResponseRedirect(request.get_full_path())
+		elif add_user_form.is_valid() and submit == 'Add User':
+			user = add_user_form.cleaned_data['username']
+			todolist.users.add(user)
 			return HttpResponseRedirect(request.get_full_path())
 
 	context = {
 		'todolistForm':todolistForm,
 		'adduserForm':add_user_form,
-		'users':users
+		'users':users,
+		'list':todolist
 	}
 	template = "tasks/list_edit.html"
 	return render(request, template, context)
 
-@login_required
-def list_add_user(request, list_slug):
-	todolist = get_object_or_404(TodoList, slug=list_slug)
-	if request.user not in todolist.users.all():
-		raise Http404
-	form = EditListForm(request.POST)
-	context = {
-
-	}
-	template = "template.html"
-	return render(request, template, context)
+# @login_required
+# def list_add_user(request, list_slug):
+# 	context = {
+# 		'todolistForm':todolistForm,
+# 		'adduserForm':add_user_form,
+# 		'users':users,
+# 		'list':todolist
+# 	}
+# 	template = "tasks/list_edit.html"
+# 	return render(request, template, context)
 
 
 @login_required

@@ -25,21 +25,19 @@ $(document).ready(function(){
 	<div class="col-sm-6 col-sm-offset-3 panel panel-default pn">
 		<div class="panel-body">
 			<h3>Edit List</h3>
-			<form action="" method="POST">{% csrf_token %}
+			<form action="{% url 'list_edit' list_slug=list.slug %}" method="POST">{% csrf_token %}
 				<div class="input-group">
 					{{ todolistForm|crispy }}
-					<span class="input-group-btn">
-						<input type="submit" value="Save Title" class="btn btn-primary form-control">
+					<span class="input-group-btn" {% if todolistForm.errors %}style="top:-15px"{% endif %}>
+						<input type="submit" value="Save Title" class="btn btn-primary form-control" name='submit'>
 					</span>
 				</div>
-			</form>
 			<hr/>
 			<h4>Users</h4>
-			<form action="" method="POST">{% csrf_token %}
 				<div class="input-group">
 					{{ adduserForm|crispy }}
-					<span class="input-group-btn">
-						<input type="submit" value="Add User" class="btn btn-primary form-control">
+					<span class="input-group-btn" {% if adduserForm.errors %}style="top:-15px"{% endif %}>
+						<input type="submit" value="Add User" class="btn btn-primary form-control" name='submit'>
 					</span>
 				</div>
 			</form>
