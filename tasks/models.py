@@ -32,7 +32,6 @@ class TodoManager(models.Manager):
 
 		new_task = self.model(title = title,slug=get_random_string(length=10), todolist=todolist)
 		new_task.save(using=self._db)
-		new_task.subcribe_user(user)
 		
 		return new_task
 
@@ -91,8 +90,18 @@ class Todo(models.Model):
 
 	
 	def mark_as_archived(self):
+		try:
+			tasks_to_change_order = self.todolist.todo_set.filter(
+				order__gt = self.order
+				)
+			for change_order in tasks_to_change_order:
+				change_order.order = change_order.order -1
+				change_order.save()
+
+		except:
+			pass
 		self.status = 'archived'
-		self.order = ''
+		self.order = None
 		self.save()
 
 	
@@ -174,9 +183,17 @@ class TodoList(models.Model):
 	def __unicode__(self):
 		return self.title
 	
+	def is_created_by(self,user):
+		if user == self.creator:
+			return True
+		return False
 	
 	def task_count(self):
 		return len(self.todo_set.all())
+
+	def mark_as_archived(self):
+		self.status = 'archived'
+		self.save()
 
 
 

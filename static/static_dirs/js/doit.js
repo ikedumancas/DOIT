@@ -15,7 +15,7 @@ function create_task(form){
 			append_this = LI_ITEM_TO_CLONE.clone()
 			append_this.attr('data-task-id', json.slug)
 			append_this.find('.todo-title-text').html(json.title)
-			append_this.find('.glyphicon-ok').attr('href', json.title)
+			append_this.find('.glyphicon-ok').attr('href', json.done_url)
 			append_this.find('.glyphicon-pencil').attr('href', json.edit_url)
 			append_this.find('.glyphicon-trash').attr('href', json.archive_url)
 			append_this.appendTo($(form).siblings('ul'))
@@ -24,11 +24,11 @@ function create_task(form){
 		error: function(xhr,errmsg,err) {
 			$.gritter.add({
 				title: 'Oops! Something went wrong.',
-				text: xhr.status + ": " + xhr.responseText,
 				sticky: false,
 				time: ''
 			});
-			
+			console.log(errmsg)
+			console.log(xhr.status + ": " + xhr.responseText)
 		}
 	});
 }
@@ -43,6 +43,9 @@ function create_list(form){
 			new_width = LIST_CONTAINER.width() + $('.todolist-panel').outerWidth();
 			LIST_CONTAINER.width(new_width);
 			append_this = LIST_TO_CLONE.clone()
+			append_this.find('.glyphicon-user').attr('href', json.users_url)
+			append_this.find('.glyphicon-pencil').attr('href', json.edit_url)
+			append_this.find('.glyphicon-trash').attr('href', json.archive_url)
 			append_this.find('.panel-title-text').html(json.title)
 			append_this.find('ul.list-group').attr('data-list-id', json.slug)
 			append_this.find('input[type=hidden]').val(json.slug)
@@ -61,12 +64,9 @@ function create_list(form){
 		}
 	});
 }
-$(document).ready(function(){
-	$('.task-btn.glyphicon-trash, .task-btn.glyphicon-ok').on('click', function(event){
-	    event.preventDefault();
-	    link = $(this);
-	    $.ajax({
-		url: $(this).attr('href'),
+function do_task_action(link){
+	$.ajax({
+		url: link.attr('href'),
 		type: 'GET',
 		success: function(json) {
 			li = link.closest('li');
@@ -101,6 +101,62 @@ $(document).ready(function(){
 			console.log(xhr.status + ": " + xhr.responseText)
 		}
 	});
+}
+function reorder_list_tasks(slug,new_order){
+	$.ajax({
+		url: REORDER_URL,
+		type: 'POST',
+		data: { csrfmiddlewaretoken: csrf_token, task_slug: slug, order:new_order  },
+		success: function(json) {
+			console.log('List Reordered');
+		},
+		error: function(xhr,errmsg,err) {
+			$.gritter.add({
+				title: 'Oops! Something went wrong.',
+				sticky: false,
+				time: ''
+			});
+			console.log(errmsg)
+			console.log(xhr.status + ": " + xhr.responseText)
+		}
+	});
+}
+function delete_list (link) {
+	$.ajax({
+		url: link.attr('href'),
+		type: 'GET',
+		success: function(json) {
+			panel = link.closest('.todolist-panel')
+			if(json.result == 'archived'){
+				panel.remove();
+				console.log('Archived');
+			}
+		},
+		error: function(xhr,errmsg,err) {
+			$.gritter.add({
+				title: 'Oops! Something went wrong.',
+				sticky: false,
+				time: ''
+			});
+			console.log(errmsg)
+			console.log(xhr.status + ": " + xhr.responseText)
+		}
+	});
+}
+$(document).ready(function(){
+	$('body').on('click', '.task-btn.glyphicon-trash, .task-btn.glyphicon-ok, .list-btn.glyphicon-trash', function(event){
+	    event.preventDefault();
+	    link = $(this);
+	    if(link.hasClass('list-btn')){
+	    	confirm_delete = confirm('Are you sure you want to delete this list?');
+	    	if(!confirm_delete){
+	    		return false;
+	    	}else{
+	    		delete_list(link);
+	    	}
+	    }else{
+	    	do_task_action(link);
+	    }
 	});
 
 	$('#quick_list_form').on('submit', function(event){
@@ -117,25 +173,7 @@ $(document).ready(function(){
 		update: function(event, ui) {
 			var slug = $(ui.item).data('task-id')
 			var new_order = ui.item.index() + 1;
-			console.log(slug)
-			console.log(new_order)
-			$.ajax({
-				url: REORDER_URL,
-				type: 'POST',
-				data: { csrfmiddlewaretoken: csrf_token, task_slug: slug, order:new_order  },
-				success: function(json) {
-					console.log('List Reordered');
-				},
-				error: function(xhr,errmsg,err) {
-					$.gritter.add({
-						title: 'Oops! Something went wrong.',
-						sticky: false,
-						time: ''
-					});
-					console.log(errmsg)
-					console.log(xhr.status + ": " + xhr.responseText)
-				}
-			});
+			reorder_list_tasks(slug,new_order)
 		}
 	}).disableSelection();
 

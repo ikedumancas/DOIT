@@ -45,6 +45,9 @@ def list_create(request):
 				response_data = {}
 				response_data['title'] = new_list.title
 				response_data['slug'] = new_list.slug
+				response_data['edit_url'] = reverse('list_edit', kwargs={'list_slug': new_list.slug})
+				response_data['users_url'] = reverse('list_users', kwargs={'list_slug': new_list.slug})
+				response_data['archive_url'] = reverse('list_archive', kwargs={'list_slug': new_list.slug})
 				response_data['result'] = 'New list created!'
 				return HttpResponse(
 					json.dumps(response_data),
@@ -54,6 +57,40 @@ def list_create(request):
 				list_title = form.cleaned_data['title']
 				new_list = TodoList.objects.create_list(user=request.user, title=list_title)
 				return redirect('home')
+
+
+@login_required
+def list_edit(request):
+	context = {
+
+	}
+	template = "template.html"
+	return render(request, template, context)
+
+
+def list_users(request):
+	context = {
+
+	}
+	template = "template.html"
+	return render(request, template, context)
+
+
+@login_required
+def list_archive(request, list_slug):
+	task_list = get_object_or_404(TodoList, slug=list_slug)
+	if task_list.is_created_by(request.user):
+		task_list.mark_as_archived()
+		if request.is_ajax():
+			response_data = {}
+			response_data['result'] = 'archived'
+			return HttpResponse(
+					json.dumps(response_data),
+					content_type="application/json"
+				)
+	else:
+		raise Http404
+	return redirect('home')
 
 
 @login_required
@@ -228,3 +265,4 @@ def todo_ajax_reorder(request):
 			json.dumps(response_data),
 			content_type="application/json"
 			)
+

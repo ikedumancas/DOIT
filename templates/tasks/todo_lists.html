@@ -67,9 +67,9 @@ REORDER_URL = "{% url 'todo_ajax_reorder' %}"
 				<h5 class="panel-title">
 					<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <span class="panel-title-text">{{ list.title }}</span>
 					<span class="pull-right">
-						<a href="" class="list-btn btn btn-success btn-xs glyphicon glyphicon-user" title="Users"></a>
-						<a href="" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
-						<a href="" class="list-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive List"></a>
+						<a href="{% url 'list_users' list_slug=list.slug %}" class="list-btn btn btn-success btn-xs glyphicon glyphicon-user" title="Users"></a>
+						<a href="{% url 'list_edit' list_slug=list.slug %}" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
+						<a href="{% url 'list_archive' list_slug=list.slug %}" class="list-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive List"></a>
 					</span>
 				</h5>
 		  	</div>
@@ -123,6 +123,7 @@ REORDER_URL = "{% url 'todo_ajax_reorder' %}"
 				<h5 class="panel-title">
 					<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <span class="panel-title-text"></span>
 					<span class="pull-right">
+						<a href="" class="list-btn btn btn-success btn-xs glyphicon glyphicon-user" title="Users"></a>
 						<a href="" class="list-btn btn btn-primary btn-xs glyphicon glyphicon-pencil" title="Edit Item"></a>
 						<a href="" class="list-btn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Archive List"></a>
 					</span>
