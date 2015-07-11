@@ -8,12 +8,8 @@ ALLOWED_HOSTS = []
 FULL_DOMAIN_NAME = 'http://localhost:8000'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'taskmgr_db',                      
-        'USER': os.environ.get('DB_UNAME'),
-        'PASSWORD': os.environ.get('DB_PWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 TIME_ZONE = 'UTC'
