@@ -1,9 +1,9 @@
 from common import *
 
-DEBUG = True
+DEBUG = False
 
 # Allow all host headers
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ikedumancas-doit.herokuapp.com']
 
 FULL_DOMAIN_NAME = 'https://ikedumancas-doit.herokuapp.com'
 

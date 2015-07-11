@@ -1,12 +1,16 @@
+beautifulsoup4==4.4.0
 dj-database-url==0.3.0
 dj-static==0.0.6
 Django==1.8
 django-crispy-forms==1.4.0
 django-debug-toolbar==1.3.2
+django-htmlmin==0.7.0
 gunicorn==19.3.0
+html5lib==0.999999
 psycopg2==2.6.1
 pygeoip==0.3.2
 pytz==2015.4
+six==1.9.0
 sqlparse==0.1.15
 static3==0.6.1
 wheel==0.24.0

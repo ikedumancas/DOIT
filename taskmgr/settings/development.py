@@ -20,7 +20,7 @@ USE_I18N = False
 USE_L10N = True
 
 USE_TZ = True
-
+HTML_MINIFY = True
 
 # if os.environ.get('HEROKU_ENV') is not None:
 #     STATIC_ROOT = 'staticfiles'
