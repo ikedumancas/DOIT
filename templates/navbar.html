@@ -17,7 +17,9 @@
 			{% if user.is_authenticated %}
 				<li class="notification-dropdown dropdown" id="notification_dropdown">
 					<a href="#" class="notification-toggle dropdown-toggle" data-toggle="dropdown" role="button" id="notification_dropdown_toggler"><span class="glyphicon glyphicon-inbox" title="Notifications"></span> <span class="caret"></span></a>
-				<ul class="dropdown-menu" id="notification_dropdown_container"></ul>
+				<ul class="dropdown-menu" id="notification_dropdown_container">
+					<li><a href="#">Soon</a></li>
+				</ul>
 				</li>
 				<li class="user-dropdown dropdown" id="user_dropdown">
 					<a href="#" class="user-toggle dropdown-toggle" data-toggle="dropdown" role="button" id="user_dropdown_toggler"><span class="glyphicon glyphicon-user" title="User"></span> {{ user }} <span class="caret"></span></a>
