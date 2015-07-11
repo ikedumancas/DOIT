@@ -8,9 +8,7 @@
 
 <script>
 $(document).ready(function(){
-{% block js %}
-REORDER_URL = "{% url 'todo_ajax_reorder' %}"
-{% endblock %}
+{% block js %}REORDER_URL = "{% url 'todo_ajax_reorder' %}"{% endblock %}
 });
 </script>
 
