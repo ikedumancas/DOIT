@@ -7,8 +7,11 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
 
 LANGUAGE_CODE = 'en-us'
-
-
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+    50: 'danger',
+}
 ########## MANAGER CONFIGURATION
 # Admin and managers for this project. These people receive private site
 # alerts.

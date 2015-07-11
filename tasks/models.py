@@ -129,7 +129,7 @@ class Todo(models.Model):
 					color = 'danger'
 					days_from_due_date_string = 'Today'
 				else:
-					days_from_due_date_string = "%s days" %(days_from_due_date)
+					days_from_due_date_string = "%s" %(due_date.strftime("%b %d"))
 			else:
 				color = 'danger'
 				overdue = 'overdue'

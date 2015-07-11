@@ -1,3 +1,4 @@
+import string
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -26,7 +27,7 @@ class UserProfile(models.Model):
         return self.user.username
 
     def full_name(self):
-    	return "%s, %s" %(self.user.last_name, self.user.first_name)
+    	return string.capwords("%s, %s" %(self.user.last_name, self.user.first_name))
 
 
 

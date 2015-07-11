@@ -50,15 +50,16 @@ class RegisterForm(forms.Form):
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')
+		exists = None
 		try:
 			exists = User.objects.get(email=email)
-			if exists:
-				raise forms.ValidationError("This email is taken")
 		except User.DoesNotExist:
 			return email
 		except:
 			raise forms.ValidationError(
 			    "There was an error, please try again or contact us.")
+		if exists:
+			raise forms.ValidationError("This email is taken")
 
 
 class EditAccountForm(forms.Form):
