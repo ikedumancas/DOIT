@@ -46,7 +46,7 @@ class AddUserToListForm(forms.Form):
 
 class TaskForm(forms.Form):
 	title = forms.CharField(
-		widget=forms.TextInput(attrs={'placeholder': 'New Task', 'class':'create_quick_task'}),
+		widget=forms.TextInput(attrs={'placeholder': 'New Task', 'class':'create_quick_task', 'id':''}),
 		label = ''
 		)
 	todolist = forms.CharField();

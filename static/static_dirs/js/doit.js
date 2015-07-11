@@ -34,7 +34,7 @@ function create_task(form){
 }
 function create_list(form){
 	new_list_title = $(form).find('#create_quick_list').val()
-	csrf_token = $(form).find('input[type=hidden]').val()
+	csrf_token = $(form).find('input[name=csrfmiddlewaretoken]').val()
 	$.ajax({
 		url: $(form).attr('action'),
 		type: 'POST',
@@ -48,6 +48,7 @@ function create_list(form){
 			append_this.find('.panel-title-text').html(json.title)
 			append_this.find('ul.list-group').attr('data-list-id', json.slug)
 			append_this.find('input[type=hidden]').val(json.slug)
+			append_this.find('input[name=csrfmiddlewaretoken]').val(csrf_token)
 			append_this.appendTo(LIST_CONTAINER).css('display','block');
 			$('#create_list_panel').appendTo(LIST_CONTAINER)
 			$(form).find('#create_quick_list').val('')
@@ -163,18 +164,19 @@ $(document).ready(function(){
 	    create_list(this)
 	});
 
-	$('.quick_task_form').on('submit', function(event){
+	$('body').on('submit', '.quick_task_form', function(event){
 	    event.preventDefault();
 	    create_task(this)
 	});
 	// make tasks in todolist sortable
 	$('.todolist .list-group').sortable({
+		handle: '.glyphicon-resize-vertical',
 		update: function(event, ui) {
 			var slug = $(ui.item).data('task-id')
 			var new_order = ui.item.index() + 1;
 			reorder_list_tasks(slug,new_order)
 		}
-	}).disableSelection();
+	});
 
 	// set todolist container width
 	var new_width = 0;

@@ -35,7 +35,7 @@ REORDER_URL = "{% url 'todo_ajax_reorder' %}"
 				<ul class="list-group" data-list-id="{{ list.slug }}">
 					{% for todo in list.todo_set.all %}
 					<li class="list-group-item {% if todo.status == 'done' %}task-done{% endif %}" data-task-id="{{ todo.slug }}">
-						<div style="width:25px" class="glyphicon glyphicon-move pull-left"></div>
+						<div style="width:25px" class="glyphicon glyphicon-resize-vertical pull-left"></div>
 						<div style="width:92%" class="todo-title pull-left">
 							<span class="todo-title-text">{{ todo.title }}</span>
 							{% if todo.due_date and todo.status != 'done'  %}
@@ -88,7 +88,7 @@ REORDER_URL = "{% url 'todo_ajax_reorder' %}"
 		  	</div>
 		  	<div class="panel-body">
 				<ul class="list-group" data-list-id=""></ul>
-				<form action="{% url 'task_create' %}" method="POST" class='quick_task_form'> {% csrf_token %}
+				<form action="{% url 'task_create' %}" method="POST" class='quick_task_form'> <input name="csrfmiddlewaretoken" type="hidden" value="">
 					{{ todo_form.title|as_crispy_field }}
 					<input type="hidden" name="todolist" value="" />
 				</form>
@@ -98,7 +98,7 @@ REORDER_URL = "{% url 'todo_ajax_reorder' %}"
 </div>
 <div class="clone-task" style="display:none">
 	<li class="list-group-item" data-task-id="">
-		<div style="width:25px" class="glyphicon glyphicon-move pull-left"></div>
+		<div style="width:25px" class="glyphicon glyphicon-resize-vertical pull-left"></div>
 		<div style="width:92%" class="todo-title pull-left">
 			<span class="todo-title-text"></span>
 			<span class="pull-right">
