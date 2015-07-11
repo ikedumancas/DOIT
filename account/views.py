@@ -41,7 +41,10 @@ def auth_register(request):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
 		password = form.cleaned_data['password2']
-		User.objects.create_user(username=username, email=email, password=password)
+		first_name = form.cleaned_data['first_name']
+		last_name = form.cleaned_data['last_name']
+			
+		User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
 		return redirect('login')
 	context = {
 		'form':form,
