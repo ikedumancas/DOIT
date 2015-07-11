@@ -6,22 +6,15 @@ ALLOWED_HOSTS = []
 
 
 FULL_DOMAIN_NAME = 'http://localhost:8000'
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-# import dj_database_url
-# DATABASES['default'] =  dj_database_url.config()
+from .db_settings import DB_NAME, DB_UNAME, DB_PWD, DB_HOST, DB_PORT
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'taskmgr_db',                      
-        'USER': 'cellname',
-        'PASSWORD': 'cloudfone',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': DB_NAME,                      
+        'USER': DB_UNAME,
+        'PASSWORD': DB_PWD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
 TIME_ZONE = 'UTC'

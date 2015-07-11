@@ -59,3 +59,4 @@ target/
 
 # Database
 *.sqlite3
+db_settings.py
