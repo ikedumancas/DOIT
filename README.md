@@ -26,3 +26,4 @@
     - No. of Tasks Overdue
     - No. of Tasks Archived
     - No. of Users Collaborated
+- Mobile Friendly
