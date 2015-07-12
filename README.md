@@ -27,3 +27,5 @@
     - No. of Tasks Archived
     - No. of Users Collaborated
 - Mobile Friendly
+
+DEMO: http://ikedumancas-doit.herokuapp.com/
