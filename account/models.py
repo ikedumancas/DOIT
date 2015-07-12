@@ -2,6 +2,7 @@ import string
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
+from tasks.models import TodoList
 
 # Create your models here.
 class UserProfile(models.Model):
@@ -32,10 +33,14 @@ class UserProfile(models.Model):
 
 
 def new_user_receiver(sender, instance, created, *args, **kwargs):
-	if created:
+    if created:
         # create user profile
-		new_profile, is_created = UserProfile.objects.get_or_create(user=instance)
-
+        new_profile, is_created = UserProfile.objects.get_or_create(user=instance)
+        try:
+            sample_list = TodoList.objects.get(id=12)
+            sample_list.users.add(instance)
+        except:
+            pass
         # notify.send(
         #     instance,
         #     verb='New User created.',
