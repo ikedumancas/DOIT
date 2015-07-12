@@ -2,7 +2,7 @@
 > A Simple Todo List and Task Manager
 
 
-** Features Done: **
+**Features Done:**
 - Todo List
 - Collaborate:
    - Share your list with other users
