@@ -36,6 +36,12 @@ $(document).ready(function(){
 						<div style="width:25px" class="glyphicon glyphicon-resize-vertical pull-left"></div>
 						<div style="width:92%" class="todo-title pull-left">
 							<span class="todo-title-text">{{ todo.title }}</span>
+							{% if todo.due_date or todo.description %}
+								<br/>
+							{% endif %}
+							{% if todo.description %}
+								<small><span class="glyphicon glyphicon-align-left" aria-hidden="true" title="{{todo.description}}"></span></small>
+							{% endif %}
 							{% if todo.due_date and todo.status != 'done'  %}
 								{{ todo.due_date_status_badge }}
 							{% endif %}
