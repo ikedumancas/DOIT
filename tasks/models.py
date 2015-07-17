@@ -7,12 +7,6 @@ from django.utils.crypto import get_random_string
 # Create your models here.
 
 
-STATUS_CHOICES = (
-	('active', 'Active'),
-	('done', 'Done'),
-	('archived', 'Archived')
-)
-
 class TodoManager(models.Manager):
 	def all(self):
 		return super(TodoManager,self).exclude(status='archived')
@@ -35,10 +29,26 @@ class TodoManager(models.Manager):
 		
 		return new_task
 
+
+STATUS_CHOICES = (
+	('active', 'Active'),
+	('done', 'Done'),
+	('archived', 'Archived')
+)
+
+PRIORITY_CHOICES =	(
+	('critical', 'Critical'),
+	('high', 'High'),
+	('normal', 'Normal'),
+	('low', 'Low'),
+	('minor', 'Minor')
+)
+
 class Todo(models.Model):
 	todolist = models.ForeignKey('TodoList', default=1)
 	title = models.CharField(max_length=1000)
 	order = models.PositiveIntegerField(default=1, blank=True, null=True)
+	priority = models.CharField(default='normal', choices=PRIORITY_CHOICES, max_length=10)
 	slug = models.SlugField(max_length=10, blank=True, null=True)
 	status = models.SlugField(choices=STATUS_CHOICES, default='active', max_length=10)
 	description = models.TextField(max_length=5000, null=True, blank=True)
