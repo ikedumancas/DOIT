@@ -58,7 +58,7 @@ class FullTodoForm(forms.ModelForm):
 		)
 	class Meta:
 		model = Todo
-		fields = ['todolist','title', 'description', 'order', 'status', 'due_date']
+		fields = ['todolist','title', 'description', 'priority', 'order', 'status', 'due_date']
 		labels = {
 			'todolist':'List'
 		}

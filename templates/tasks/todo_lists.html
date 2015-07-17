@@ -32,7 +32,7 @@ $(document).ready(function(){
 		  	<div class="panel-body">
 				<ul class="list-group" data-list-id="{{ list.slug }}">
 					{% for todo in list.todo_set.all %}
-					<li class="list-group-item {% if todo.status == 'done' %}task-done{% endif %}" data-task-id="{{ todo.slug }}">
+					<li class="list-group-item priority-{{ todo.priority }} {% if todo.status == 'done' %}task-done{% endif %}" data-task-id="{{ todo.slug }}">
 						<div style="width:25px" class="glyphicon glyphicon-resize-vertical pull-left"></div>
 						<div style="width:92%" class="todo-title pull-left">
 							<span class="todo-title-text">{{ todo.title }}</span>

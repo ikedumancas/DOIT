@@ -22,13 +22,6 @@ body {
 .navbar-default {
 	border:0;
 }
-.todolist {
-	background: #fff;
-	border-radius: 0;
-	box-shadow: 0px 3px 2px #aab2bd;
-	margin: 5px;
-	text-align: left;
-}
 
 
 /* *************************************************************************************
@@ -162,10 +155,21 @@ PANELS CONFIGURATIONS
 	padding-right: 4px;
 	font-size: 14px;
 }
+
+/* *************************************************************************************
+LISTS CONFIGURATIONS
+*************************************************************************************** */
 #lists-container > div {
 	display: none;
 	width: 420px;
   	float: left;
+}
+.todolist {
+	background: #fff;
+	border-radius: 0;
+	box-shadow: 0px 3px 2px #aab2bd;
+	margin: 5px;
+	text-align: left;
 }
 .todolist .panel-heading {
 	background-color: #fff;
@@ -200,4 +204,22 @@ PANELS CONFIGURATIONS
 }
 .task-done .todo-title .todo-title-text {
 	text-decoration: line-through;
+}
+.list-group-item[class*=priority-] {
+	padding-left:12px;
+}
+.list-group-item.priority-critical {
+	border-left: 3px solid #d9534f !important;	
+}
+.list-group-item.priority-high {
+	border-left: 3px solid #f0ad4e !important;	
+}
+.list-group-item.priority-normal {
+	padding-left: 15px !important;
+}
+.list-group-item.priority-low {
+	border-left: 3px solid #5cb85c !important;	
+}
+.list-group-item.priority-minor {
+	border-left: 3px solid #5bc0de !important;	
 }
