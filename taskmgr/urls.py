@@ -27,6 +27,9 @@ urlpatterns = [
     url(r'^todo/(?P<task_slug>[\w-]+)/undone/$', 'tasks.views.task_undone', name='task_undone'),
     url(r'^todo/(?P<task_slug>[\w-]+)/archive/$', 'tasks.views.task_archive', name='task_archive'),
 
+    url(r'^notifications/$', 'notifications.views.all', name='notifications_all'),
+    url(r'^notifications/read/all/$', 'notifications.views.read_all', name='notifications_read_all'),
+    url(r'^notifications/read/(?P<id>\d+)/$', 'notifications.views.read', name='notifications_read'),
 
     url(r'^admin/', include(admin.site.urls)),
 ]

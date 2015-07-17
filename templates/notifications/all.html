@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+<style>
+{% block css %}
+
+{% endblock %}
+</style>
+
+<script>
+$(document).ready(function(){
+{% block js %}
+
+{% endblock %}
+});
+</script>
+
+{% block content %}
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Notification</th>
+			<th style="text-align:center">Status<br />(<small><a href="">Read All</a></small>)</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for note in notifications %}
+			<tr>
+				<td>{{ note }}</td>
+				<td style="text-align:center">{% if note.read %} Read {% else %} Unread {% endif %}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
+
