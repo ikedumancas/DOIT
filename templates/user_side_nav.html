@@ -1,0 +1,30 @@
+<div class="doit-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+  <header class="doit-drawer-header">
+    {# <img src="images/user.jpg" class="doit-avatar"> #}
+    <i class="material-icons md-48">account_circle</i>
+    <div class="doit-avatar-dropdown">
+      <span>{{user}}</span>
+      <div class="mdl-layout-spacer"></div>
+      <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons">arrow_drop_down</i>
+      </button>
+      <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
+        <li><a href="" class="mdl-menu__item">Edit Account</a></li>
+        <li><a href="" class="mdl-menu__item">Logout</a></li>
+      </ul>
+    </div>
+  </header>
+  <nav class="doit-navigation mdl-color--blue-grey-800" style="padding: 0 8px;">
+    <div id="loading-lists">
+      Getting Lists
+      <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate progress-demo" style="width:100%;"></div>
+    </div>
+    <form id="creat-list">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo" style="width:100%;font-weight: 500;font-size: 13px;">
+        <input class="mdl-textfield__input" type="text" id="sample3" style="border:0" />
+        <label class="mdl-textfield__label mdl-color-text--blue-50" for="sample3" style="font-weight: 500;font-size: 13px;"><i class="material-icons md-12">add</i>ADD LIST...</label>
+      </div>
+    </form>
+    <a class="mdl-navigation__link mdl-button mdl-js-button mdl-js-ripple-effect" href=""><i class="mdl-color-text--blue-grey-400 material-icons">help_outline</i>Help</a>
+  </nav>
+</div>

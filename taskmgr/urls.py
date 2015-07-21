@@ -13,8 +13,13 @@ urlpatterns = [
     url(r'^accounts/logout/$', 'account.views.auth_logout', name='logout'),
     url(r'^accounts/register/$', 'account.views.auth_register', name='register'),
     
+    # New URL for material
+    url(r'^$', 'tasks.views.home2', name='home'),
+    url(r'^todolist/get/lists-info/$', 'tasks.views.get_list_info', name='get_list_info'),
+    # url(r'^todolist/ajax/get/lists-tasks$', 'tasks.views.list_create', name='list_create'),
+
     # List url
-    url(r'^$', 'tasks.views.home', name='home'),
+    # url(r'^$', 'tasks.views.home', name='home'),
     url(r'^todolist/create/$', 'tasks.views.list_create', name='list_create'),
     url(r'^todolist/(?P<list_slug>[\w-]+)/deluser/(?P<id>\d+)/$', 'tasks.views.list_delete_user', name='list_delete_user'),
     url(r'^todolist/(?P<list_slug>[\w-]+)/edit/$', 'tasks.views.list_edit', name='list_edit'),

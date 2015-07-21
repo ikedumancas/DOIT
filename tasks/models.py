@@ -11,6 +11,15 @@ class TodoManager(models.Manager):
 	def all(self):
 		return super(TodoManager,self).exclude(status='archived')
 
+	def due_today(self):
+		now = datetime.date.today()
+		return super(TodoManager,self).filter(due_date=now,status='active')
+
+	def due_in_seven(self):
+		now = datetime.date.today()
+		upto = datetime.date.today()+datetime.timedelta(days=7)
+		return super(TodoManager,self).filter(due_date__gt=now,due_date__lte=upto,status='active')
+
 	def create_todo(self, user=None, title=None, list_slug=None):
 		if not user:
 			raise ValueError('Must include a User when adding a new list')
@@ -120,6 +129,26 @@ class Todo(models.Model):
 		self.save()
 
 	
+	def is_today(self):
+		if self.due_date:
+			due_date = self.due_date
+			now = datetime.date.today()
+			if due_date == now:
+				return True
+		return False
+
+	
+	def is_in_seven(self):
+		if self.due_date:
+			due_date = self.due_date
+			now = datetime.date.today()
+			if due_date > now:
+				date_diff = due_date - now
+				days_from_due_date = date_diff.days
+				if days_from_due_date >= 7:
+					return True
+		return False
+	
 	def due_date_status_badge(self):
 		color = 'default'
 		overdue = ''
@@ -205,6 +234,9 @@ class TodoList(models.Model):
 	def mark_as_archived(self):
 		self.status = 'archived'
 		self.save()
+
+	def active_count(self):
+		return self.todo_set.filter(status='active').count()
 
 
 

@@ -9,6 +9,79 @@ from .forms import AddUserToListForm,FullTodoForm, ListForm, ListReorderForm, No
 from account.forms import LoginForm, RegisterForm
 
 
+
+def get_list_info(request):
+	if request.user.is_authenticated():
+		user_todo_lists = request.user.lists.all()
+		lists = []
+		user_lists = []
+		today_count = 0
+		in_seven_count = 0
+		for todolist in reversed(user_todo_lists):
+			today_count = today_count + todolist.todo_set.due_today().count()
+			in_seven_count = in_seven_count + todolist.todo_set.due_in_seven().count()
+			append_this = {
+				"title":todolist.title,
+				"slug":todolist.slug,
+				"count":todolist.active_count()
+			}
+			user_lists.append(append_this)
+		lists.extend(user_lists)
+		in_seven_list_info = {
+			"title":"Next 7 Days",
+			"slug":"in_seven_days",
+			"count":in_seven_count
+		}
+		lists.append(in_seven_list_info)
+		today_list_info = {
+			"title":"Today",
+			"slug":"today",
+			"count":today_count
+		}
+		lists.append(today_list_info)
+		json_data = json.dumps(lists)
+		return HttpResponse(json_data, content_type='application/json')
+	else:
+		raise Http404
+
+
+
+
+
+
+
+
+
+
+
+
+def home2(request):
+	if request.user.is_authenticated():
+		list_form = ListForm()
+		todo_form = TaskForm()
+		user = request.user
+		user_todo_lists = user.lists.all()
+		context = {
+			"todolists":user_todo_lists,
+			"list_form":list_form,
+			"todo_form":todo_form
+		}
+		template = "tasks/material.html"
+	else:
+		login_form = LoginForm
+		register_form = RegisterForm
+		context = {
+			"login_form": login_form,
+			"register_form": register_form,
+		}
+		template = "home.html"
+	context = {
+
+	}
+	
+	return render(request, template, context)
+
+
 def home(request):
 	if request.user.is_authenticated():
 		list_form = ListForm()

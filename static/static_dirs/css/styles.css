@@ -17,22 +17,52 @@
 html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
 }
-.demo-avatar {
+.material-icons.md-12 { font-size: 12px; }
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+.doit-avatar {
   width: 48px;
   height: 48px;
   border-radius: 24px;
 }
-
-.demo-layout .mdl-layout__header .mdl-layout__drawer-button {
+.doit-layout .doit-header .mdl-textfield {
+  padding-top: 27px;
+}
+.doit-layout .mdl-layout__header .mdl-layout__drawer-button {
   color: rgba(0, 0, 0, 0.54);
+}
+.doit-layout__content {
+  overflow: auto !important;
 }
 .mdl-layout__drawer .avatar {
   margin-bottom: 16px;
 }
-.demo-drawer {
+.doit-drawer {
   border: none;
+  overflow-x: hidden;
 }
-.demo-drawer-header {
+/* iOS Safari specific workaround */
+.doit-drawer .mdl-menu__container {
+  z-index: -1;
+}
+.doit-drawer .doit-navigation {
+  z-index: -2;
+}
+/* END iOS Safari specific workaround */
+.doit-drawer .mdl-menu .mdl-menu__item{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.doit-drawer-header {
   box-sizing: border-box;
   display: -webkit-box;
   display: -webkit-flex;
@@ -50,7 +80,7 @@ html, body {
   padding: 16px;
   height: 151px;
 }
-.demo-avatar-dropdown {
+.doit-avatar-dropdown {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -68,13 +98,13 @@ html, body {
   width: 100%;
 }
 
-.demo-navigation {
+.doit-navigation {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
-.demo-layout .demo-navigation .mdl-navigation__link {
+.doit-layout .doit-navigation .mdl-navigation__link {
   display: -webkit-box !important;
   display: -webkit-flex !important;
   display: -ms-flexbox !important;
@@ -90,36 +120,39 @@ html, body {
           align-items: center;
   color: rgba(255, 255, 255, 0.56);
   font-weight: 500;
+  margin: 0 -8px;
+  padding: 0 8px;
+  text-decoration: none !important;
 }
-.demo-navigation .mdl-navigation__link .material-icons {
+.doit-layout .doit-navigation .mdl-navigation__link:hover {
+  background-color: #00BCD4; 
+  color: #37474F;
+}
+.doit-navigation .mdl-navigation__link .material-icons {
   font-size: 24px;
   color: rgba(255, 255, 255, 0.56);
-  margin-right: 32px;
+  margin-right: 5px;
 }
 
-.demo-content {
-  max-width: 1080px;
-}
-
-.demo-charts {
+.doit-charts {
   -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
 }
-.demo-chart:nth-child(1) {
+.doit-chart:nth-child(1) {
   color: #ACEC00;
 }
-.demo-chart:nth-child(2) {
+.doit-chart:nth-child(2) {
   color: #00BBD6;
 }
-.demo-chart:nth-child(3) {
+.doit-chart:nth-child(3) {
   color: #BA65C9;
 }
-.demo-chart:nth-child(4) {
+.doit-chart:nth-child(4) {
   color: #EF3C79;
 }
-.demo-graphs {
+.doit-graphs {
   padding: 16px 32px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -139,21 +172,21 @@ html, body {
  * not float around outside their container in IE10/11.
  * Using a browserhacks.com solution for now.
  */
-_:-ms-input-placeholder, :root .demo-graphs {
+_:-ms-input-placeholder, :root .doit-graphs {
   min-height: 664px;
 }
-_:-ms-input-placeholder, :root .demo-graph {
+_:-ms-input-placeholder, :root .doit-graph {
   max-height: 300px;
 }
 /* TODO end */
-.demo-graph:nth-child(1) {
+.doit-graph:nth-child(1) {
   color: #00b9d8;
 }
-.demo-graph:nth-child(2) {
+.doit-graph:nth-child(2) {
   color: #d9006e;
 }
 
-.demo-cards {
+.doit-cards {
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
       -ms-flex-align: start;
@@ -162,48 +195,48 @@ _:-ms-input-placeholder, :root .demo-graph {
       -ms-flex-line-pack: start;
           align-content: flex-start;
 }
-.demo-cards .demo-separator {
+.doit-cards .doit-separator {
   height: 32px;
 }
-.demo-cards .mdl-card__title.mdl-card__title {
+.doit-cards .mdl-card__title.mdl-card__title {
   color: white;
   font-size: 24px;
   font-weight: 400;
 }
-.demo-cards ul {
+.doit-cards ul {
   padding: 0;
 }
-.demo-cards h3 {
+.doit-cards h3 {
   font-size: 1em;
 }
-.demo-updates .mdl-card__title {
+.doit-updates .mdl-card__title {
   min-height: 200px;
   background-image: url('images/dog.png');
   background-position: 90% 100%;
   background-repeat: no-repeat;
 }
-.demo-cards .mdl-card__actions a {
+.doit-cards .mdl-card__actions a {
   color: #00BCD4;
   text-decoration: none;
 }
 
-.demo-options h3 {
+.doit-options h3 {
   margin: 0;
 }
-.demo-options .mdl-checkbox__box-outline {
+.doit-options .mdl-checkbox__box-outline {
   border-color: rgba(255, 255, 255, 0.89);
 }
-.demo-options ul {
+.doit-options ul {
   margin: 0;
   list-style-type: none;
 }
-.demo-options li {
+.doit-options li {
   margin: 4px 0;
 }
-.demo-options .material-icons {
+.doit-options .material-icons {
   color: rgba(255, 255, 255, 0.89);
 }
-.demo-options .mdl-card__actions {
+.doit-options .mdl-card__actions {
   height: 64px;
   display: -webkit-box;
   display: -webkit-flex;
