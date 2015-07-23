@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>Starter Template - Materialize</title>
+  <title>DO!T - Todolist Manager</title>
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="{% static 'plugins/materialize/css/materialize.min.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -13,7 +13,7 @@
 <body>
 	<header>
 		<nav class="top-nav">
-			<div class="nav-wrapper"><a class="page-title">Navbar</a></div>
+			<div class="nav-wrapper"><a class="page-title truncate">Today</a></div>
 		</nav>
 		<div class="container">
 			<a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only">
@@ -26,7 +26,6 @@
 					<h1 style="margin: 4px 0;">DO!T</h1>
 				</a>
 			</li>
-
 			<div class="col s12 center" id="doit-list-preloader">
 				<div class="preloader-wrapper small active">
 				  <div class="spinner-layer spinner-red-only">
@@ -41,9 +40,6 @@
 				</div>
 				<p>Loading lists</p>
 			</div>
-
-			{# User Lists will be loaded here #}
-
 			<li class="no-hover-effect">
 				<form>
 					<div class="doit-input-field">
@@ -58,15 +54,25 @@
 		<div class="row">
 			<div class="col s12">
 				<div class="row">
-					<div class="col s12 m6">
-						<div class="card">
-							<div class="card-content">
-								<span class="card-title activator grey-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span>
-							</div>
-							<div class="card-reveal">
-								<span class="card-title deactivator grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat culpa hic, laboriosam. Asperiores, numquam, officia? Eveniet enim unde, deleniti amet modi alias, blanditiis doloremque laudantium necessitatibus non harum animi aspernatur.</p>
-							</div>
+					<div class="col s12 m6" id="doit-container"></div>
+					<div class="card" id="doit-template" style="display:none">
+						<div class="card-content">
+							<p class="doit-title"></p>
+							<i class="tiny material-icons doit-has-description" title="This task has a description.">description</i>
+							<span class="doit-has-comment">
+								<i class="tiny material-icons" title="comments">chat_bubble</i> <span class="doit-comment-count"></span>
+							</span>
+							<span title="Task Due" class="badge doit-badge doit-has-duedate grey">
+								<i class="material-icons">access_time</i> <span class="doit-duedate"></span></span>
+						</div>
+						<div class="card-action" style="padding:8px">
+							{# if status is active class = waves-green white. text for icon = grey-text #}
+							{# if status is inactive class = waves-light green. text for icon = none #}
+							<a href="#" class="btn-floating waves-effect waves-green doit-task-status white" data-url=""><i class="material-icons grey-text" title="Status">check</i></a>
+							<span class="right">
+							<a href="#" class="btn-floating waves-effect waves-light doit-task-edit" data-url=""><i class="material-icons" title="Edit">edit</i></a>
+							<a href="#" class="btn-floating btn-small waves-effect waves-light red doit-task-delete" data-url="" style="margin:0"><i class="material-icons" title="Delete">delete</i></a>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -75,17 +81,19 @@
 	</main>
 	<footer class="page-footer">
 		<div class="footer-copyright">
-			<div class="container">
-				this was created by <a class="creator-link" href="http://ikedumancas.github.io">ikedumancas</a>
-			</div>
-		</div>
+            <div class="container">
+            © 2015 Copyright ikedumancas
+            <a class="grey-text text-lighten-4 right" href="mailto:ikedumancas@gmail.com">ikedumancas@gmail.com</a>
+            </div>
+          </div>
 	</footer>
 
   <!--  Scripts-->
 	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
 	<script src="{% static 'plugins/materialize/js/materialize.min.js' %}"></script>
 	<script src="{% static 'js/WearProtection.js' %}"></script>
-	<script src="{% static 'js/main-doit.js' %}"></script>
-	<script src="{% static 'js/init.js' %}"></script>
+	<script src="{% static 'js/main-doit.js' %}" ></script>
+	<script src="{% static 'js/init.js' %}" defer></script>
 </body>
 </html>

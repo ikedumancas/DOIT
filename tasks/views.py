@@ -54,7 +54,8 @@ def get_list_tasks(request):
 			if len(slug) < 11:
 				todos = []
 				if slug == "today":
-					taskslist = Todo.objects.due_today().filter(todolist__users=request.user)
+					taskslist = Todo.objects.due_today().filter(todolist__users=request.user).order_by('todolist')
+					print taskslist
 					todos.extend(taskslist)
 				elif slug == "in7days":
 					taskslist = Todo.objects.due_in_seven().filter(todolist__users=request.user)
@@ -67,24 +68,30 @@ def get_list_tasks(request):
 					list_slug = todo.todolist.slug
 					list_title = todo.todolist.title
 					append_this = {}
-					append_this[list_slug] = {}
-					append_this[list_slug]['list'] = {}
-					append_this[list_slug]['list'][todo.slug] = {}
-					append_this[list_slug]['list_title'] = list_title
-					append_this[list_slug]['list'][todo.slug]['title'] = todo.title
-					append_this[list_slug]['list'][todo.slug]['has_description'] = todo.has_description()
+					append_this['list'] = {}
+					append_this['list']['slug'] = list_slug
+					append_this['list']['list_title'] = list_title
+					
+					append_this['list']['todo'] = {}
+					append_this['list']['todo']['slug'] = todo.slug
+					append_this['list']['todo']['title'] = todo.title
+					append_this['list']['todo']['priority'] = todo.priority
+					append_this['list']['todo']['is_active'] = todo.is_active()
+					append_this['list']['todo']['has_description'] = todo.has_description()
+					append_this['list']['todo']['edit_url'] = reverse('task_edit', kwargs={'task_slug': todo.slug})
+					if todo.is_active():
+						append_this['list']['todo']['done_url'] = reverse('task_done', kwargs={'task_slug': todo.slug})
+					else:
+						append_this['list']['todo']['done_url'] = reverse('task_undone', kwargs={'task_slug': todo.slug})
+					append_this['list']['todo']['archive_url'] = reverse('task_archive', kwargs={'task_slug': todo.slug})
 					try:
 						overdue, due_date, status = todo.get_due_date()
-						append_this[list_slug]['list'][todo.slug]['due_date'] = {}
-						append_this[list_slug]['list'][todo.slug]['due_date']['overdue'] = overdue
-						append_this[list_slug]['list'][todo.slug]['due_date']['date'] = due_date
-						append_this[list_slug]['list'][todo.slug]['due_date']['status'] = status
+						append_this['list']['todo']['due_date'] = {}
+						append_this['list']['todo']['due_date']['overdue'] = overdue
+						append_this['list']['todo']['due_date']['date'] = due_date
+						append_this['list']['todo']['due_date']['status'] = status
 					except:
 						pass
-
-					append_this[list_slug]['list'][todo.slug]['edit_url'] = reverse('task_edit', kwargs={'task_slug': todo.slug})
-					append_this[list_slug]['list'][todo.slug]['done_url'] = reverse('task_done', kwargs={'task_slug': todo.slug})
-					append_this[list_slug]['list'][todo.slug]['archive_url'] = reverse('task_archive', kwargs={'task_slug': todo.slug})
 					response_data.append(append_this)
 				json_data = json.dumps(response_data)
 		return HttpResponse(json_data, content_type='application/json')

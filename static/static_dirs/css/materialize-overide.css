@@ -8,6 +8,9 @@ body {
   font-size:13px;
 }
 /* DOIT classes & id */
+ #doit-container .card .card-content {
+  cursor:pointer;
+ }
 small.doit-input-helper-text {
   -webkit-transition: display .25s ease;
     -moz-transition: display .25s ease;
@@ -16,11 +19,37 @@ small.doit-input-helper-text {
     transition: display .25s ease;
   display: none;
 }
+span.badge.doit-badge {
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: #fff;
+  background-color: #26a69a;
+  border-radius: 2px;
+  position: inherit;
+  padding: 3px;
+}
+span.badge.doit-badge>.material-icons {
+  font-size: 0.8rem;
+}
+.card.priority-critical {
+  border-left: 3px solid #d9534f !important;  
+}
+.card.priority-high {
+  border-left: 3px solid #f0ad4e !important;  
+}
+.card.priority-low {
+  border-left: 3px solid #5cb85c !important;  
+}
+.card.priority-minor {
+  border-left: 3px solid #5bc0de !important;  
+}
+
 /* MATERIALIZE */
 .material-icons {
   bottom: -2px;
   position: relative;
 }
+
 /* NAVIGATION*/
 nav.top-nav {
   height: 64px;
@@ -34,7 +63,7 @@ a.button-collapse.top-nav {
   text-align: center;
   height: 48px;
   width: 48px;
-  left: 7.5%;
+  left: 0;
   top: 0;
   float: none;
   margin-left: 1.5rem;
@@ -46,15 +75,17 @@ a.button-collapse.top-nav {
 
 @media only screen and (max-width : 600px) {
   a.button-collapse.top-nav {
-    left: 5%; } }
+    left: 0; } }
 @media only screen and (min-width : 993px) {
+  nav .nav-wrapper {
+    padding-left:20px; }
   header, main, footer {
     padding-left: 240px;
   } }
 
 @media only screen and (max-width : 992px) {
   nav .nav-wrapper {
-    text-align: center; }
+    padding-left:20%; }
     nav .nav-wrapper a.page-title {
       font-size: 36px; } }
 

@@ -103,6 +103,12 @@ class Todo(models.Model):
 		self.save()
 
 
+	def is_active(self):
+		if self.status=='active':
+			return True
+		return False
+
+
 	def has_description(self):
 		if self.description:
 			return True
@@ -190,7 +196,7 @@ class Todo(models.Model):
 
 
 	def get_due_date(self):
-		color = 'default'
+		status = 'default'
 		overdue = False
 		if self.due_date:
 			due_date = self.due_date
@@ -199,18 +205,18 @@ class Todo(models.Model):
 				date_diff = due_date - now
 				days_from_due_date = date_diff.days
 				if days_from_due_date == 2:
-					color = 'info'
+					status = 'info'
 					days_from_due_date_string = "%s days" %(days_from_due_date)
 				elif days_from_due_date == 1:
-					color = 'warning'
+					status = 'warning'
 					days_from_due_date_string = 'Tomorrow'
 				elif days_from_due_date == 0:
-					color = 'danger'
+					status = 'danger'
 					days_from_due_date_string = 'Today'
 				else:
 					days_from_due_date_string = "%s" %(due_date.strftime("%b %d"))
 			else:
-				color = 'danger'
+				status = 'danger'
 				overdue = True
 				date_diff = now - due_date
 				days_from_due_date = date_diff.days
@@ -219,7 +225,7 @@ class Todo(models.Model):
 				else:
 					days_from_due_date_string = "%s days" %(days_from_due_date)
 
-			return overdue, days_from_due_date_string, color
+			return overdue, days_from_due_date_string, status
 		return ''
 
 

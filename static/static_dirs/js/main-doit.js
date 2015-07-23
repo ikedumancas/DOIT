@@ -18,15 +18,15 @@ function LoadUserLists () {
 				}
 				if(this.slug=='today') {
 					$('#nav-mobile .logo').after('<li title="'+ this.title +'" class="bold no-padding">\
-						<a href="#'+ this.slug +'-list" class="waves-effect waves-red">\
+						<a href="#'+ this.slug +'-list" class="waves-effect waves-red doit-list-select">\
 						<i class="tiny material-icons red-text">today</i> '+ title +'<span class="badge">'+ this.count +'</span></a></li>');
 				} else if(this.slug=='in7days') {
 					$('#nav-mobile .logo').after('<li title="'+ this.title +'" class="bold no-padding">\
-						<a href="#'+ this.slug +'-list" class="waves-effect waves-red">\
+						<a href="#'+ this.slug +'-list" class="waves-effect waves-orange doit-list-select">\
 						<i class="tiny material-icons orange-text">today</i> '+ title +'<span class="badge">'+ this.count +'</span></a></li>');
 				} else {
 					$('#nav-mobile .logo').after('<li title="'+ this.title +'" class="bold no-padding">\
-						<a href="#'+ this.slug +'-list" class="waves-effect waves-red">\
+						<a href="#'+ this.slug +'-list" class="waves-effect waves-teal doit-list-select">\
 						<i class="tiny material-icons teal-text">list</i> '+ title +'<span class="badge">'+ this.count +'</span></a></li>');
 				}
 			});
@@ -41,14 +41,77 @@ function LoadUserLists () {
 	});
 }
 function LoadTasksForList(slug) {
-	console.log("Getting tasks for List with slug equal to " + slug);
-	title =
+	var slug_to_load = slug;
+	console.log("Getting tasks for List with slug equal to " + slug_to_load);
 	$.ajax({
 		url:getCookie('get_task_url').split('"')[1],
 		type: 'POST',
-		data: { slug: slug },
+		data: { slug: slug_to_load },
 		success: function(json) {
-
+			console.log("Loading Tasks...");
+			var container = $('#doit-container')
+			container.html('');
+			if(slug_to_load == 'today' || slug_to_load == 'in7days'){
+				if(slug_to_load == 'today'){
+					$('header>.top-nav .page-title').html("Today");
+				}else {
+					$('header>.top-nav .page-title').html("Next 7 days");
+				}
+			} else {
+				$('header>.top-nav .page-title').html(json[0].list.list_title);
+			}
+			var first_iteration = true;
+			$(json).each(function(){
+				var template_clone = $('#doit-template').clone();
+				template_clone.attr('id', this.list.todo.slug + '-todo');
+				template_clone.addClass('priority-'+this.list.todo.priority);
+				template_clone.find('.doit-title').html(this.list.todo.title);
+				template_clone.find('.doit-task-status').attr('data-url',this.list.todo.done_url);
+				template_clone.find('.doit-task-edit').attr('data-url',this.list.todo.edit_url);
+				template_clone.find('.doit-task-delete').attr('data-url',this.list.todo.archive_url);
+				if(!this.list.todo.is_active) {
+					template_clone.addClass('light-blue accent-3 white-text');
+					template_clone.find('.doit-task-status').removeClass('waves-green white').addClass('waves-light green');
+					template_clone.find('.doit-task-status .material-icons').removeClass('grey-text');
+				}
+				if(!this.list.todo.has_description) {
+					template_clone.find('.doit-has-description').remove();
+				}
+				if(this.list.todo.comment_count){
+					template_clone.find('.doit-has-comment doit-comment-count').html(this.list.todo.comment_count);
+				}else{
+					template_clone.find('.doit-has-comment').remove();
+				}
+				if(this.list.todo.due_date){
+					if(this.list.todo.due_date.status != 'default'){
+						if(this.list.todo.is_active){
+							if(this.list.todo.due_date.status == 'warning'){
+								template_clone.find('.doit-has-duedate').removeClass('grey').addClass('orange');
+							}else {
+								template_clone.find('.doit-has-duedate').removeClass('grey').addClass('red');
+							}
+						}
+					}
+					if(this.list.todo.due_date.overdue) {
+						if(!this.list.todo.is_active){
+							template_clone.find('.doit-duedate').html(this.list.todo.due_date.date+' ago');
+						}else {
+							template_clone.find('.doit-duedate').html(this.list.todo.due_date.date+' overdue');
+						}
+					}else{
+						template_clone.find('.doit-duedate').html(this.list.todo.due_date.date);
+					}
+				}else{
+					template_clone.find('.doit-has-duedate').remove();
+				}
+				// change display css
+				template_clone.css('display','');
+				// Append to list
+				container.append(template_clone);
+			});
+			if(slug_to_load != 'today' && slug_to_load != 'in7days'){
+				$('#doit-container').sortable().disableSelection();
+			}
 			console.log("Tasks loaded successfully!");
 		},
 		error: function(xhr,errmsg,err) {
@@ -79,28 +142,25 @@ $(document).ready(function(){
 		footerGoesDown();
 	});
 
-	// detect input helper
+	// input helper
 	$('body').on('focus', 'input',function(){
-		$(this).siblings('.doit-input-helper-text').css('display','block');
+		$(this).siblings('.doit-input-helper-text').fadeIn();
+	});
+	$('body').on('blur', 'input',function(){
+		$(this).siblings('.doit-input-helper-text').fadeOut();
 	});
 
-	function setCardHeightToRevealHeight(card){
-		card.height(card.find('.card-reveal')[0].scrollHeight);
-	}
-	$('body').on('click', '.card .activator',function(){
-		card = $(this).closest('.card');
-		setTimeout(function(){ 
-			setCardHeightToRevealHeight(card);
-		}, 0);
 
-		// card.height(card.find('.card-reveal').delay(100).scrollTop());
-		
-		// card.css('height', card.find('.card-reveal')[0].scrollHeight)
+	// detect list clicked
+	$('body').on('click', '.doit-list-select', function(){
+		slug = $(this).attr('href').split('#')[1].split('-list')[0]
+		LoadTasksForList(slug);
 	});
-	$('body').on('click', '.card .deactivator',function(){
-		card = $(this).closest('.card')
-		card.css('height', '')
-	})
+	// detect task clicked
+	$('body').on('click', '.card', function(){
+		// get tasks detail ajax;
+		// display modal with data from ajax
+	});
 	// Get list tasks and activate tab
 	// Add list
 	// Edit list
