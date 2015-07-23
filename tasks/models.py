@@ -102,6 +102,12 @@ class Todo(models.Model):
 			change_order.save()
 		self.save()
 
+
+	def has_description(self):
+		if self.description:
+			return True
+		return False
+
 	
 	def mark_as_active(self):
 		self.status = 'active'
@@ -180,6 +186,40 @@ class Todo(models.Model):
 					days_from_due_date_string = "%s days" %(days_from_due_date)
 
 			return mark_safe('<span class="label label-%s"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> %s %s</span>' %(color, days_from_due_date_string, overdue))
+		return ''
+
+
+	def get_due_date(self):
+		color = 'default'
+		overdue = False
+		if self.due_date:
+			due_date = self.due_date
+			now = datetime.date.today()
+			if due_date >= now:
+				date_diff = due_date - now
+				days_from_due_date = date_diff.days
+				if days_from_due_date == 2:
+					color = 'info'
+					days_from_due_date_string = "%s days" %(days_from_due_date)
+				elif days_from_due_date == 1:
+					color = 'warning'
+					days_from_due_date_string = 'Tomorrow'
+				elif days_from_due_date == 0:
+					color = 'danger'
+					days_from_due_date_string = 'Today'
+				else:
+					days_from_due_date_string = "%s" %(due_date.strftime("%b %d"))
+			else:
+				color = 'danger'
+				overdue = True
+				date_diff = now - due_date
+				days_from_due_date = date_diff.days
+				if days_from_due_date == 1:
+					days_from_due_date_string = "%s day" %(days_from_due_date)
+				else:
+					days_from_due_date_string = "%s days" %(days_from_due_date)
+
+			return overdue, days_from_due_date_string, color
 		return ''
 
 

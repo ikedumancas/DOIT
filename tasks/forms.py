@@ -17,6 +17,9 @@ class ListForm(forms.Form):
 		help_text="Press [Enter] to create"
 		)
 
+class ListSlugForm(forms.Form):
+	slug = forms.CharField(max_length=10)
+
 class EditListForm(forms.Form):
 	title = forms.CharField(
 		widget=forms.TextInput(attrs={'placeholder': 'List Title','id':'list_title'}),

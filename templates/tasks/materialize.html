@@ -1,0 +1,91 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="{% static 'plugins/materialize/css/materialize.min.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{% static 'css/materialize-overide.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+	<header>
+		<nav class="top-nav">
+			<div class="nav-wrapper"><a class="page-title">Navbar</a></div>
+		</nav>
+		<div class="container">
+			<a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only">
+				<i class="mdi-navigation-menu"></i>
+			</a>
+		</div>
+		<ul id="nav-mobile" class="side-nav fixed">
+			<li class="logo no-hover-effect" style="margin-top:0;padding-bottom:25px;">
+				<a id="logo-container" href="http://materializecss.com/" class="brand-logo">
+					<h1 style="margin: 4px 0;">DO!T</h1>
+				</a>
+			</li>
+
+			<div class="col s12 center" id="doit-list-preloader">
+				<div class="preloader-wrapper small active">
+				  <div class="spinner-layer spinner-red-only">
+				    <div class="circle-clipper left">
+				      <div class="circle"></div>
+				    </div><div class="gap-patch">
+				      <div class="circle"></div>
+				    </div><div class="circle-clipper right">
+				      <div class="circle"></div>
+				    </div>
+				  </div>
+				</div>
+				<p>Loading lists</p>
+			</div>
+
+			{# User Lists will be loaded here #}
+
+			<li class="no-hover-effect">
+				<form>
+					<div class="doit-input-field">
+						<input id="add_list" type="text" placeholder="Add another list..." required />
+						<small class="doit-input-helper-text">* Press [Enter] to create</small>
+					</div>
+				</form>
+			</li>
+		</ul>
+	</header>
+	<main>
+		<div class="row">
+			<div class="col s12">
+				<div class="row">
+					<div class="col s12 m6">
+						<div class="card">
+							<div class="card-content">
+								<span class="card-title activator grey-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span>
+							</div>
+							<div class="card-reveal">
+								<span class="card-title deactivator grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat culpa hic, laboriosam. Asperiores, numquam, officia? Eveniet enim unde, deleniti amet modi alias, blanditiis doloremque laudantium necessitatibus non harum animi aspernatur.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer class="page-footer">
+		<div class="footer-copyright">
+			<div class="container">
+				this was created by <a class="creator-link" href="http://ikedumancas.github.io">ikedumancas</a>
+			</div>
+		</div>
+	</footer>
+
+  <!--  Scripts-->
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'plugins/materialize/js/materialize.min.js' %}"></script>
+	<script src="{% static 'js/WearProtection.js' %}"></script>
+	<script src="{% static 'js/main-doit.js' %}"></script>
+	<script src="{% static 'js/init.js' %}"></script>
+</body>
+</html>

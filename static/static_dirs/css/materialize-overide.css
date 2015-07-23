@@ -1,0 +1,82 @@
+@import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
+body {
+  color: #797979;
+  background: #f2f2f2;
+  font-family: 'Ruda', sans-serif;
+  padding: 0px !important;
+  margin: 0px !important;
+  font-size:13px;
+}
+/* DOIT classes & id */
+small.doit-input-helper-text {
+  -webkit-transition: display .25s ease;
+    -moz-transition: display .25s ease;
+    -o-transition: display .25s ease;
+    -ms-transition: display .25s ease;
+    transition: display .25s ease;
+  display: none;
+}
+/* MATERIALIZE */
+.material-icons {
+  bottom: -2px;
+  position: relative;
+}
+/* NAVIGATION*/
+nav.top-nav {
+  height: 64px;
+  box-shadow: none; }
+  nav.top-nav a.page-title {
+    line-height: 64px;
+    font-size: 48px; }
+
+a.button-collapse.top-nav {
+  position: absolute;
+  text-align: center;
+  height: 48px;
+  width: 48px;
+  left: 7.5%;
+  top: 0;
+  float: none;
+  margin-left: 1.5rem;
+  color: #fff;
+  font-size: 32px;
+  z-index: 2; }
+  a.button-collapse.top-nav.full {
+    line-height: 64px; }
+
+@media only screen and (max-width : 600px) {
+  a.button-collapse.top-nav {
+    left: 5%; } }
+@media only screen and (min-width : 993px) {
+  header, main, footer {
+    padding-left: 240px;
+  } }
+
+@media only screen and (max-width : 992px) {
+  nav .nav-wrapper {
+    text-align: center; }
+    nav .nav-wrapper a.page-title {
+      font-size: 36px; } }
+
+ul.side-nav.fixed li.logo {
+  text-align: center;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+}
+ul.side-nav.fixed li.no-hover-effect:hover {
+  background-color: transparent;
+}
+ul.side-nav.fixed li a {
+  font-size: 13px;
+  line-height: 34px;
+  height: 34px;
+}
+/* FOOTER */
+a.creator-link {
+  font-weight: bold;
+  color: white;
+}
+a.creator-link:hover {
+  text-decoration: underline;
+}

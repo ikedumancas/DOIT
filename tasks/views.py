@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, Http404, HttpResponseRedirect, redirect, render
 
 from .models import TodoList, Todo
-from .forms import AddUserToListForm,FullTodoForm, ListForm, ListReorderForm, NoListFullTodoForm, TaskForm, EditListForm
+from .forms import AddUserToListForm,FullTodoForm, ListForm, ListReorderForm, ListSlugForm, NoListFullTodoForm, TaskForm, EditListForm
 from account.forms import LoginForm, RegisterForm
 
 
@@ -29,7 +29,7 @@ def get_list_info(request):
 		lists.extend(user_lists)
 		in_seven_list_info = {
 			"title":"Next 7 Days",
-			"slug":"in_seven_days",
+			"slug":"in7days",
 			"count":in_seven_count
 		}
 		lists.append(in_seven_list_info)
@@ -45,6 +45,50 @@ def get_list_info(request):
 		raise Http404
 
 
+@login_required
+def get_list_tasks(request):
+	if request.method == "POST":
+		form = ListSlugForm(request.POST)
+		if form.is_valid():
+			slug = form.cleaned_data['slug']
+			if len(slug) < 11:
+				todos = []
+				if slug == "today":
+					taskslist = Todo.objects.due_today().filter(todolist__users=request.user)
+					todos.extend(taskslist)
+				elif slug == "in7days":
+					taskslist = Todo.objects.due_in_seven().filter(todolist__users=request.user)
+					todos.extend(taskslist)
+				else:
+					todolist = get_object_or_404(TodoList, slug=slug)
+					todos.extend(todolist.todo_set.all())
+				response_data = []
+				for todo in todos:
+					list_slug = todo.todolist.slug
+					list_title = todo.todolist.title
+					append_this = {}
+					append_this[list_slug] = {}
+					append_this[list_slug]['list'] = {}
+					append_this[list_slug]['list'][todo.slug] = {}
+					append_this[list_slug]['list_title'] = list_title
+					append_this[list_slug]['list'][todo.slug]['title'] = todo.title
+					append_this[list_slug]['list'][todo.slug]['has_description'] = todo.has_description()
+					try:
+						overdue, due_date, status = todo.get_due_date()
+						append_this[list_slug]['list'][todo.slug]['due_date'] = {}
+						append_this[list_slug]['list'][todo.slug]['due_date']['overdue'] = overdue
+						append_this[list_slug]['list'][todo.slug]['due_date']['date'] = due_date
+						append_this[list_slug]['list'][todo.slug]['due_date']['status'] = status
+					except:
+						pass
+
+					append_this[list_slug]['list'][todo.slug]['edit_url'] = reverse('task_edit', kwargs={'task_slug': todo.slug})
+					append_this[list_slug]['list'][todo.slug]['done_url'] = reverse('task_done', kwargs={'task_slug': todo.slug})
+					append_this[list_slug]['list'][todo.slug]['archive_url'] = reverse('task_archive', kwargs={'task_slug': todo.slug})
+					response_data.append(append_this)
+				json_data = json.dumps(response_data)
+		return HttpResponse(json_data, content_type='application/json')
+	raise Http404
 
 
 
@@ -54,32 +98,6 @@ def get_list_info(request):
 
 
 
-
-def home2(request):
-	if request.user.is_authenticated():
-		list_form = ListForm()
-		todo_form = TaskForm()
-		user = request.user
-		user_todo_lists = user.lists.all()
-		context = {
-			"todolists":user_todo_lists,
-			"list_form":list_form,
-			"todo_form":todo_form
-		}
-		template = "tasks/material.html"
-	else:
-		login_form = LoginForm
-		register_form = RegisterForm
-		context = {
-			"login_form": login_form,
-			"register_form": register_form,
-		}
-		template = "home.html"
-	context = {
-
-	}
-	
-	return render(request, template, context)
 
 
 def home(request):
