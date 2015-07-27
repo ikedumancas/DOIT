@@ -142,6 +142,63 @@ function LoadTasksForList(slug) {
 // Edit title
 // Add user to list
 // Delete list
+function delete_list (link) {
+	$.ajax({
+		url: link.attr('href'),
+		type: 'GET',
+		success: function(json) {
+			panel = link.closest('.todolist-panel')
+			if(json.result == 'archived'){
+				panel.remove();
+				console.log('Archived');
+			}
+		},
+		error: function(xhr,errmsg,err) {
+			$.gritter.add({
+				title: 'Oops! Something went wrong.',
+				sticky: false,
+				time: ''
+			});
+			console.log(errmsg)
+			console.log(xhr.status + ": " + xhr.responseText)
+		}
+	});
+}
+// do task action
+function do_task_action(link){
+	card = link.closest('.card');
+	if(link.hasClass('doit-task-status')){
+		link.toggleClass('white waves-green green waves-light');
+		link.children('.material-icons').toggleClass('grey-text');
+		card.toggleClass('light-blue accent-3 white-text');
+	} else {
+		card.css('display','none');
+	}
+	console.log('Changing status');
+	$.ajax({
+		url: link.data('url'),
+		type: 'GET',
+		success: function(json) {
+			if(json.result == 'archived'){
+				card.remove();
+				console.log('Task archived');
+			} else {
+				link.data('url', json.link);
+				console.log('Status changed');
+			}
+		},
+		error: function(xhr,errmsg,err) {
+			console.log('error');
+			$.gritter.add({
+				title: 'Oops! Something went wrong.',
+				sticky: false,
+				time: ''
+			});
+			console.log(errmsg)
+			console.log(xhr.status + ": " + xhr.responseText)
+		}
+	});
+}
 // Add task
 // Edit task
 // Delete task
@@ -183,7 +240,6 @@ $(document).ready(function(){
 		$(this).siblings('.doit-input-helper-text').fadeOut();
 	});
 
-
 	// detect list clicked
 	$('body').on('click', '.doit-list-select', function(){
 		slug = $(this).attr('href').split('#')[1].split('-list')[0]
@@ -206,4 +262,20 @@ $(document).ready(function(){
 	// Reorder task
 	// Comment on task
 	// Assign task ( not sure yet )
+
+	// click task action buttons or delete list button
+	$('body').on('click', '.doit-task-status, .doit-task-delete, .list-btn.glyphicon-trash', function(event){
+	    event.preventDefault();
+	    link = $(this);
+	    if(link.hasClass('list-btn')){
+	    	confirm_delete = confirm('Are you sure you want to delete this list?');
+	    	if(!confirm_delete){
+	    		return false;
+	    	}else{
+	    		delete_list(link);
+	    	}
+	    }else{
+	    	do_task_action(link);
+	    }
+	});
 });
