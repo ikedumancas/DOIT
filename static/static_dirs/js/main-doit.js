@@ -66,65 +66,66 @@ function LoadTasksForList(slug) {
 				$('header>.top-nav .page-title').html(json[0].list.list_title);
 			}
 			var first_iteration = true;
-			if(json){
-				console.log(json);
-			}
-			$(json).each(function(){
-				var template_clone = $('#doit-template').clone();
-				template_clone.attr('id', this.list.todo.slug + '-todo');
-				template_clone.addClass('priority-'+this.list.todo.priority);
-				template_clone.find('.doit-title').html(this.list.todo.title);
-				template_clone.find('.doit-task-status').attr('data-url',this.list.todo.done_url);
-				template_clone.find('.doit-task-edit').attr('data-url',this.list.todo.edit_url);
-				template_clone.find('.doit-task-delete').attr('data-url',this.list.todo.archive_url);
-				if(!this.list.todo.is_active) {
-					template_clone.addClass('light-blue accent-3 white-text');
-					template_clone.find('.doit-task-status').removeClass('waves-green white').addClass('waves-light green');
-					template_clone.find('.doit-task-status .material-icons').removeClass('grey-text');
-				}
-				if(!this.list.todo.has_description) {
-					template_clone.find('.doit-has-description').remove();
-				}
-				if(this.list.todo.comment_count){
-					template_clone.find('.doit-has-comment doit-comment-count').html(this.list.todo.comment_count);
-				}else{
-					template_clone.find('.doit-has-comment').remove();
-				}
-				if(this.list.todo.due_date){
-					if(this.list.todo.due_date.status != 'default'){
-						if(this.list.todo.is_active){
-							if(this.list.todo.due_date.status == 'warning'){
-								template_clone.find('.doit-has-duedate').removeClass('grey').addClass('orange');
-							}else {
-								template_clone.find('.doit-has-duedate').removeClass('grey').addClass('red');
+			if(json.length > 0) {
+				$(json).each(function(){
+					var template_clone = $('#doit-template').clone();
+					template_clone.attr('id', this.list.todo.slug + '-todo');
+					template_clone.addClass('priority-'+this.list.todo.priority);
+					template_clone.find('.doit-title').html(this.list.todo.title);
+					template_clone.find('.doit-task-status').attr('data-url',this.list.todo.done_url);
+					template_clone.find('.doit-task-edit').attr('data-url',this.list.todo.edit_url);
+					template_clone.find('.doit-task-delete').attr('data-url',this.list.todo.archive_url);
+					if(!this.list.todo.is_active) {
+						template_clone.addClass('light-blue accent-3 white-text');
+						template_clone.find('.doit-task-status').removeClass('waves-green white').addClass('waves-light green');
+						template_clone.find('.doit-task-status .material-icons').removeClass('grey-text');
+					}
+					if(!this.list.todo.has_description) {
+						template_clone.find('.doit-has-description').remove();
+					}
+					if(this.list.todo.comment_count){
+						template_clone.find('.doit-has-comment doit-comment-count').html(this.list.todo.comment_count);
+					}else{
+						template_clone.find('.doit-has-comment').remove();
+					}
+					if(this.list.todo.due_date){
+						if(this.list.todo.due_date.status != 'default'){
+							if(this.list.todo.is_active){
+								if(this.list.todo.due_date.status == 'warning'){
+									template_clone.find('.doit-has-duedate').removeClass('grey').addClass('orange');
+								}else {
+									template_clone.find('.doit-has-duedate').removeClass('grey').addClass('red');
+								}
 							}
 						}
-					}
-					if(this.list.todo.due_date.overdue) {
-						if(!this.list.todo.is_active){
-							template_clone.find('.doit-duedate').html(this.list.todo.due_date.date+' ago');
-						}else {
-							template_clone.find('.doit-duedate').html(this.list.todo.due_date.date+' overdue');
+						if(this.list.todo.due_date.overdue) {
+							if(!this.list.todo.is_active){
+								template_clone.find('.doit-duedate').html(this.list.todo.due_date.date+' ago');
+							}else {
+								template_clone.find('.doit-duedate').html(this.list.todo.due_date.date+' overdue');
+							}
+						}else{
+							template_clone.find('.doit-duedate').html(this.list.todo.due_date.date);
 						}
 					}else{
-						template_clone.find('.doit-duedate').html(this.list.todo.due_date.date);
+						template_clone.find('.doit-has-duedate').remove();
 					}
-				}else{
-					template_clone.find('.doit-has-duedate').remove();
+					// change display css
+					template_clone.css('display','');
+					// Append to list
+					container.append(template_clone);
+				});
+				if(slug_to_load != 'today' && slug_to_load != 'in7days' && slug_to_load != 'overdue'){
+					$('#doit-container').sortable({
+						update: function(event, ui) {
+							var slug = $(ui.item).attr('id').split('-todo')[0];
+							var new_order = ui.item.index() + 1;
+							reorder_list_tasks(slug,new_order)
+						}
+					}).disableSelection();
 				}
-				// change display css
-				template_clone.css('display','');
-				// Append to list
-				container.append(template_clone);
-			});
-			if(slug_to_load != 'today' && slug_to_load != 'in7days'){
-				$('#doit-container').sortable({
-					update: function(event, ui) {
-						var slug = $(ui.item).attr('id').split('-todo')[0];
-						var new_order = ui.item.index() + 1;
-						reorder_list_tasks(slug,new_order)
-					}
-				}).disableSelection();
+			} else {
+				container.html('<h3>No tasks to load.</h3>')
 			}
 			console.log("Tasks loaded successfully!");
 		},
