@@ -20,6 +20,10 @@ class TodoManager(models.Manager):
 		upto = datetime.date.today()+datetime.timedelta(days=7)
 		return super(TodoManager,self).filter(due_date__gt=now,due_date__lte=upto,status='active')
 
+	def overdue(self):
+		now = datetime.date.today()
+		return super(TodoManager,self).filter(due_date__lt=now,status='active')
+
 	def create_todo(self, user=None, title=None, list_slug=None):
 		if not user:
 			raise ValueError('Must include a User when adding a new list')

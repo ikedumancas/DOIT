@@ -9,15 +9,17 @@ from .forms import AddUserToListForm,FullTodoForm, ListForm, ListReorderForm, Li
 from account.forms import LoginForm, RegisterForm
 
 
-
 def get_list_info(request):
+	# get needed list info to display on sidebar
 	if request.user.is_authenticated():
 		user_todo_lists = request.user.lists.all()
 		lists = []
 		user_lists = []
+		overdue_count = 0
 		today_count = 0
 		in_seven_count = 0
 		for todolist in reversed(user_todo_lists):
+			overdue_count = overdue_count + todolist.todo_set.overdue().count()
 			today_count = today_count + todolist.todo_set.due_today().count()
 			in_seven_count = in_seven_count + todolist.todo_set.due_in_seven().count()
 			append_this = {
@@ -39,6 +41,12 @@ def get_list_info(request):
 			"count":today_count
 		}
 		lists.append(today_list_info)
+		overdue_list_info = {
+			"title":"Overdue",
+			"slug":"overdue",
+			"count":overdue_count
+		}
+		lists.append(overdue_list_info)
 		json_data = json.dumps(lists)
 		return HttpResponse(json_data, content_type='application/json')
 	else:
@@ -59,6 +67,9 @@ def get_list_tasks(request):
 					todos.extend(taskslist)
 				elif slug == "in7days":
 					taskslist = Todo.objects.due_in_seven().filter(todolist__users=request.user)
+					todos.extend(taskslist)
+				elif slug == "overdue":
+					taskslist = Todo.objects.overdue().filter(todolist__users=request.user)
 					todos.extend(taskslist)
 				else:
 					todolist = get_object_or_404(TodoList, slug=slug)

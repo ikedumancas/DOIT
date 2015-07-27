@@ -24,6 +24,10 @@ function LoadUserLists () {
 					$('#nav-mobile .logo').after('<li title="'+ this.title +'" class="bold no-padding">\
 						<a href="#'+ this.slug +'-list" class="waves-effect waves-orange doit-list-select">\
 						<i class="tiny material-icons orange-text">today</i> '+ title +'<span class="badge">'+ this.count +'</span></a></li>');
+				} else if(this.slug=='overdue') {
+					$('#nav-mobile .logo').after('<li title="'+ this.title +'" class="bold no-padding">\
+						<a href="#'+ this.slug +'-list" class="waves-effect waves-red doit-list-select">\
+						<i class="tiny material-icons red-text">list</i> '+ title +'<span class="badge">'+ this.count +'</span></a></li>');
 				} else {
 					$('#nav-mobile .logo').after('<li title="'+ this.title +'" class="bold no-padding">\
 						<a href="#'+ this.slug +'-list" class="waves-effect waves-teal doit-list-select">\
