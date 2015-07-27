@@ -9,6 +9,7 @@ def home(request):
 		response = render(request, template, {})
 		response.set_cookie('load_list_url', reverse('get_list_info'))
 		response.set_cookie('get_task_url', reverse('get_list_tasks'))
+		response.set_cookie('reorder_url', reverse('todo_ajax_reorder'))
 		return response
 	else:
 		login_form = LoginForm

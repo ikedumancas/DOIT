@@ -172,7 +172,7 @@ $(document).ready(function(){
 	$('.todolist .list-group').sortable({
 		handle: '.glyphicon-resize-vertical',
 		update: function(event, ui) {
-			var slug = $(ui.item).data('task-id')
+			var slug = $(ui.item).attr('id').split('-todo')[0];
 			var new_order = ui.item.index() + 1;
 			reorder_list_tasks(slug,new_order)
 		}

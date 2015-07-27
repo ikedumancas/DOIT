@@ -40,6 +40,7 @@ function LoadUserLists () {
 		}
 	});
 }
+// Get list tasks
 function LoadTasksForList(slug) {
 	var slug_to_load = slug;
 	console.log("Getting tasks for List with slug equal to " + slug_to_load);
@@ -61,6 +62,9 @@ function LoadTasksForList(slug) {
 				$('header>.top-nav .page-title').html(json[0].list.list_title);
 			}
 			var first_iteration = true;
+			if(json){
+				console.log(json);
+			}
 			$(json).each(function(){
 				var template_clone = $('#doit-template').clone();
 				template_clone.attr('id', this.list.todo.slug + '-todo');
@@ -110,7 +114,13 @@ function LoadTasksForList(slug) {
 				container.append(template_clone);
 			});
 			if(slug_to_load != 'today' && slug_to_load != 'in7days'){
-				$('#doit-container').sortable().disableSelection();
+				$('#doit-container').sortable({
+					update: function(event, ui) {
+						var slug = $(ui.item).attr('id').split('-todo')[0];
+						var new_order = ui.item.index() + 1;
+						reorder_list_tasks(slug,new_order)
+					}
+				}).disableSelection();
 			}
 			console.log("Tasks loaded successfully!");
 		},
@@ -122,7 +132,6 @@ function LoadTasksForList(slug) {
 		}
 	});
 }
-// Get list tasks
 // Add list
 // Edit list
 // Edit title
@@ -132,6 +141,25 @@ function LoadTasksForList(slug) {
 // Edit task
 // Delete task
 // Reorder task
+function reorder_list_tasks(slug,new_order){
+	$.ajax({
+		url: getCookie('reorder_url').split('"')[1],
+		type: 'POST',
+		data: { task_slug: slug, order:new_order  },
+		success: function(json) {
+			console.log('List Reordered');
+		},
+		error: function(xhr,errmsg,err) {
+			$.gritter.add({
+				title: 'Oops! Something went wrong.',
+				sticky: false,
+				time: ''
+			});
+			console.log(errmsg)
+			console.log(xhr.status + ": " + xhr.responseText)
+		}
+	});
+}
 // Comment on task
 // Assign task
 
