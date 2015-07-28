@@ -151,8 +151,8 @@ function LoadTasksForList(slug) {
 			alert("Something went wrong!")
 			console.log(errmsg)
 			console.log(xhr.responseText);
-			$('body').html("<pre>" + xhr.responseText + "</pre>");
-			window.open(H_URL,"_self");
+			// $('body').html("<pre>" + xhr.responseText + "</pre>");
+			// window.open(H_URL,"_self");
 		}
 	});
 }
@@ -276,8 +276,20 @@ function GetModalContent(href){
 		url: href,
 		type: 'GET',
 		success: function(content) {
+			$('#modal-get-content').html('');
 			$('#modal-get-content').html(content);
 			$('#modal-preloader').css('display', 'none');
+			new_content = $('.modal-form');
+			new_content.find('textarea').addClass('materialize-textarea');
+			new_content.find('input + label, textarea + label').addClass('active');
+			$('select').material_select();
+			$('#id_due_date').pickadate({
+				selectMonths: true,
+				selectYears: 15,
+				format: 'yyyy-mm-dd',
+				closeOnSelect: true,
+				container: 'body'
+			});
 		},
 		error: function(xhr,errmsg,err) {
 			alert("Something went wrong!")
@@ -377,6 +389,16 @@ $(document).ready(function(){
 			// Add list
 	    	CreateList(this);
 	    }
+	});
+	$('body').on('submit', '.edit-task-form', function(event){
+	    event.preventDefault();
+	    form = $(this);
+	    SubmitFormAjax(form);
+	    LoadTasksForList(parent_list_slug);
+	    $('#modal-preloader').css('display', '');
+	    $('.edit-task-form').css('display', 'none');
+	    $('.modal').closeModal()
+	    $('#modal-preloader').css('display', 'none');
 	});
 	// Edit list
 	// Edit title

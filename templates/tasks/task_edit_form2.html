@@ -2,6 +2,7 @@
 {% for input in form  %}
 
 {% endfor %}
+<p class="flow-text">Edit Task</p>
 <form action="{{ request.get_full_path }}" method="POST" class="modal-form edit-task-form">
 	{% for input in form  %}
 		{% if input == form.order %}
@@ -31,25 +32,5 @@
 	<input type="submit" value="Save" class="btn btn-primary btn-block">
 </form>
 <script>
-	new_content = $('.edit-task-form');
-	new_content.find('textarea').addClass('materialize-textarea');
-	new_content.find('input + label, textarea + label').addClass('active');
-	$('select').material_select();
-	$('#id_due_date').pickadate({
-		selectMonths: true,
-		selectYears: 15,
-		format: 'yyyy-mm-dd',
-		closeOnSelect: true,
-		container: 'body'
-	});
-	$('body').on('submit', '.edit-task-form', function(event){
-	    event.preventDefault();
-	    form = $(this);
-	    SubmitFormAjax(form);
-	    LoadTasksForList('{{parent_list_slug}}');
-	    $('#modal-preloader').css('display', '');
-	    $('.edit-task-form').css('display', 'none');
-	    $('.modal').closeModal()
-	    $('#modal-preloader').css('display', 'none');
-	});
+	window.parent_list_slug = '{{parent_list_slug}}'
 </script>
