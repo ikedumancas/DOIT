@@ -1,6 +1,6 @@
 from common import *
 
-DEBUG = False
+DEBUG = True
 
 # Allow all host headers
 ALLOWED_HOSTS = ['ikedumancas-doit.herokuapp.com']
