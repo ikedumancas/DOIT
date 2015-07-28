@@ -15,26 +15,28 @@ class LoginForm(forms.Form):
 
 class RegisterForm(forms.Form):
 	first_name = forms.CharField(
-	    widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
+	    widget=forms.TextInput(attrs={'placeholder': 'First Name', 'required': 'true' }))
 	last_name = forms.CharField(
-	    widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
+	    widget=forms.TextInput(attrs={'placeholder': 'Last Name', 'required': 'true'}))
 	username = forms.CharField(
-	    widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+	    widget=forms.TextInput(attrs={'placeholder': 'Username', 'required': 'true'}))
 	email = forms.EmailField(
-	    widget=forms.TextInput(attrs={'placeholder': 'youremail@provider.com'}))
+	    widget=forms.TextInput(attrs={'placeholder': 'youremail@provider.com', 'required': 'true'}))
 	password1 = forms.CharField(
-	    label='Password', widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+	    label='Password', widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'required': 'true'}))
 	password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput(
-	    attrs={'placeholder': 'Password Confirmation'}))
+	    attrs={'placeholder': 'Password Confirmation', 'required': 'true'}))
 
 	def clean_password2(self):
 		password1 = self.cleaned_data.get("password1")
 		password2 = self.cleaned_data.get("password2")
-		if len(password1) < 5:
-			raise forms.ValidationError("Password is too short")
-		if password1 and password2 and password1 != password2:
-			raise forms.ValidationError("Passwords don't match")
-		return password2
+		if password1:
+			if len(password2) < 5:
+				raise forms.ValidationError("Password is too short")
+			if password1 and password2 and password1 != password2:
+				raise forms.ValidationError("Passwords don't match")
+			return password2
+		raise forms.ValidationError("Password error!")
 
 	def clean_username(self):
 		username = self.cleaned_data.get('username')
