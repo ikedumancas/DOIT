@@ -5,6 +5,19 @@ from django.contrib.auth.models import User
 from .models import Todo
 
 
+class EditTaskForm(forms.ModelForm):
+	due_date = forms.DateField(
+		help_text = 'Format: YYYY-MM-DD',
+		required = False
+		)
+	class Meta:
+		model = Todo
+		fields = ['title', 'description', 'priority', 'order', 'status', 'due_date']
+		labels = {
+			'todolist':'List'
+		}
+
+
 class ListReorderForm(forms.Form):
 	order = forms.IntegerField(min_value=1)
 	task_slug = forms.CharField(max_length=15)

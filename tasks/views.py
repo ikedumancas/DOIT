@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, Http404, HttpResponseRedirect, redirect, render
 
 from .models import TodoList, Todo
-from .forms import AddUserToListForm,FullTodoForm, ListForm, ListReorderForm, ListSlugForm, NoListFullTodoForm, TaskForm, EditListForm
+from .forms import AddUserToListForm, EditTaskForm, FullTodoForm, ListForm, ListReorderForm, ListSlugForm, NoListFullTodoForm, TaskForm, EditListForm
 from account.forms import LoginForm, RegisterForm
 
 
@@ -81,6 +81,7 @@ def get_list_tasks(request):
 					append_this['list'] = {}
 					append_this['list']['slug'] = list_slug
 					append_this['list']['list_title'] = list_title
+					append_this['list']['delete_url'] = reverse("list_archive", kwargs={'list_slug': list_slug})
 					
 					append_this['list']['todo'] = {}
 					append_this['list']['todo']['slug'] = todo.slug
@@ -108,8 +109,47 @@ def get_list_tasks(request):
 	raise Http404
 
 
+@login_required
+def edit_task(request, task_slug):
+	task = get_object_or_404(Todo, slug=task_slug)
 
+	list_users = task.todolist.users.all()
+	if request.user not in list_users:
+		raise Http404
 
+	old_task = get_object_or_404(Todo, slug=task_slug)
+	list_task_count = task.todolist.task_count()
+	list_orders = []
+	i = 1
+	while i <= list_task_count:
+		list_orders.append(i)
+		i=i+1
+	
+	form = EditTaskForm(instance=task)
+	if request.method == "POST":
+		form = EditTaskForm(request.POST, instance=task)
+		if form.is_valid():
+			old_order = old_task.order
+			new_order = form.cleaned_data['order']
+
+			if old_order != new_order:
+				old_task.change_order_to(new_order)
+
+			task.title = form.cleaned_data['title']
+			task.description = form.cleaned_data['description']
+			task.status = form.cleaned_data['status']
+			task.due_date = form.cleaned_data['due_date']
+			task.save()
+			
+			return redirect('home')
+
+	context = {
+		'form':form,
+		'list_orders':list_orders,
+		'parent_list_slug': task.todolist.slug
+	}
+	template = "tasks/task_edit_form2.html"
+	return render(request, template, context)
 
 
 
@@ -212,10 +252,12 @@ def list_delete_user(request,list_slug,id):
 def list_archive(request, list_slug):
 	task_list = get_object_or_404(TodoList, slug=list_slug)
 	if task_list.is_created_by(request.user):
+		slug = task_list.slug
 		task_list.mark_as_archived()
 		if request.is_ajax():
 			response_data = {}
 			response_data['result'] = 'archived'
+			response_data['slug'] = slug
 			return HttpResponse(
 					json.dumps(response_data),
 					content_type="application/json"

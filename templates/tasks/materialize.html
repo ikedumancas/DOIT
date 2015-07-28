@@ -9,6 +9,9 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="{% static 'plugins/materialize/css/materialize.min.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="{% static 'css/materialize-overide.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <script>
+  	var H_URL = '{{ request.get_full_path }}';
+  </script>
 </head>
 <body>
 	<header>
@@ -41,7 +44,7 @@
 				<p>Loading lists</p>
 			</div>
 			<li class="no-hover-effect" id="create_list_form_container">
-				<form action="{% url 'list_create' %}" method="POST" id="quick_list_form">
+				<form action="{% url 'list_create' %}" method="POST" class="quick_list_form">
 					<div class="doit-input-field">
 						<input id="add_list" type="text" placeholder="Add another list..." required />
 						<small class="doit-input-helper-text">* Press [Enter] to create</small>
@@ -55,6 +58,12 @@
 			<div class="col s12">
 				<div class="row">
 					<div class="col s12 m6">
+						<div id="list-controls" class="clearfix">
+							<p>
+							<a class="waves-effect waves-light red btn right delete-list"><i class="material-icons" title="Delete">delete</i> Delete List</a>
+							<span class="clearfix"></span>
+							</p>
+						</div>
 						<div id="doit-container">
 							
 						</div>
@@ -90,6 +99,25 @@
 				</div>
 			</div>
 		</div>
+		<div id="modal-container" class="modal">
+			<div class="modal-content">
+				<div id="modal-get-content"></div>
+				<div class="center" id="modal-preloader">
+					<div class="preloader-wrapper small active">
+					  <div class="spinner-layer spinner-red-only">
+					    <div class="circle-clipper left">
+					      <div class="circle"></div>
+					    </div><div class="gap-patch">
+					      <div class="circle"></div>
+					    </div><div class="circle-clipper right">
+					      <div class="circle"></div>
+					    </div>
+					  </div>
+					</div>
+					<p>Please wait...</p>
+				</div>
+			</div>
+		</div>
 	</main>
 	<footer class="page-footer">
 		<div class="footer-copyright">
@@ -99,7 +127,6 @@
             </div>
           </div>
 	</footer>
-
   <!--  Scripts-->
 	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
 	<script src="{% static 'js/jquery-ui.min.js' %}"></script>

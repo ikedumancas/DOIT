@@ -49,7 +49,9 @@ span.badge.doit-badge>.material-icons {
   bottom: -2px;
   position: relative;
 }
-
+li.active {
+  background-color: #90caf9;
+}
 /* NAVIGATION*/
 nav.top-nav {
   height: 64px;
@@ -109,4 +111,8 @@ a.creator-link {
 }
 a.creator-link:hover {
   text-decoration: underline;
+}
+.clearfix {
+  overflow: auto;
+  zoom: 1;
 }

@@ -7,7 +7,12 @@
   	LoadUserLists();
   	// Get Today List
   	setTimeout(function() {
-  	  LoadTasksForList('today');
+      if(window.location.hash ==""){
+  	   LoadTasksForList('today'); 
+      } else {
+        slug = window.location.hash.split('#')[1].split('-list')[0];
+        LoadTasksForList(slug); 
+      }
   	}, 0);
   });
 })(jQuery);

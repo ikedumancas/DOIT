@@ -9,7 +9,7 @@ function LoadUserLists () {
 		type: 'GET',
 		success: function(json) {
 			$('#doit-list-preloader').remove();
-
+			$('#nav-mobile li ~ li:not(#create_list_form_container)').remove();
 			$(json).each(function(){
 				if(this.title.length > 18) {
 					title = this.title.substring(0, 18) + '...';
@@ -55,6 +55,7 @@ function LoadTasksForList(slug) {
 		success: function(json) {
 			console.log("Loading Tasks...");
 			var container = $('#doit-container');
+
 			container.html('');
 			if(slug_to_load == 'today' || slug_to_load == 'in7days' || slug_to_load == 'overdue'){
 				if(slug_to_load == 'today'){
@@ -65,12 +66,15 @@ function LoadTasksForList(slug) {
 					$('header>.top-nav .page-title').html("Next 7 days");
 				}
 				$('.quick_task_form').css('display', 'none');
+				$('.delete-list').css('display', 'none')
 			} else {
 				if(json.length > 0) {
 					$('.quick_task_form').css('display', '');
 					$('header>.top-nav .page-title').html(json[0].list.list_title);
 					$('.quick_task_form #list_slug').val(json[0].list.slug);
 				}
+				$('.delete-list').attr('href', '/todolist/'+slug+'/archive/');
+				$('.delete-list').css('display', '')
 			}
 			if(json.length > 0) {
 				$(json).each(function(){
@@ -79,7 +83,7 @@ function LoadTasksForList(slug) {
 					template_clone.addClass('priority-'+this.list.todo.priority);
 					template_clone.find('.doit-title').html(this.list.todo.title);
 					template_clone.find('.doit-task-status').attr('data-url',this.list.todo.done_url);
-					template_clone.find('.doit-task-edit').attr('data-url',this.list.todo.edit_url);
+					template_clone.find('.doit-task-edit').attr('href',this.list.todo.edit_url);
 					template_clone.find('.doit-task-delete').attr('data-url',this.list.todo.archive_url);
 					if(!this.list.todo.is_active) {
 						template_clone.addClass('light-blue accent-3 white-text');
@@ -93,6 +97,11 @@ function LoadTasksForList(slug) {
 						template_clone.find('.doit-has-comment doit-comment-count').html(this.list.todo.comment_count);
 					}else{
 						template_clone.find('.doit-has-comment').remove();
+					}
+					if(slug_to_load == 'today' || slug_to_load == 'in7days' || slug_to_load == 'overdue'){
+						template_clone.find('.doit-has-duedate').after('<a href="#'+this.list.slug+'-list" class="doit-list-select">\
+							<span title="List Origin" class="badge doit-badge doit-has-list-origin grey">\
+							<i class="material-icons">list</i> <span class="doit-list-origin">'+this.list.list_title+'</span></span></a>');
 					}
 					if(this.list.todo.due_date){
 						if(this.list.todo.due_date.status != 'default'){
@@ -143,6 +152,7 @@ function LoadTasksForList(slug) {
 			console.log(errmsg)
 			console.log(xhr.responseText);
 			$('body').html("<pre>" + xhr.responseText + "</pre>");
+			window.open(H_URL,"_self");
 		}
 	});
 }
@@ -171,14 +181,16 @@ function CreateList(form){
 // Add user to list
 // Delete list
 function DeleteList(link) {
+	window.link = link;
+	console.log('Deleting list');
 	$.ajax({
 		url: link.attr('href'),
 		type: 'GET',
 		success: function(json) {
 			panel = link.closest('.todolist-panel')
 			if(json.result == 'archived'){
-				panel.remove();
-				console.log('Archived');
+				LoadTasksForList('today');
+				$('li a[href=#'+json.slug+'-list]').remove();
 			}
 		},
 		error: function(xhr,errmsg,err) {
@@ -241,7 +253,7 @@ function CreateTask(form){
 			template_clone.attr('id', json.slug + '-todo');
 			template_clone.find('.doit-title').html(json.title);
 			template_clone.find('.doit-task-status').attr('data-url',json.done_url);
-			template_clone.find('.doit-task-edit').attr('data-url',json.edit_url);
+			template_clone.find('.doit-task-edit').attr('href',json.edit_url);
 			template_clone.find('.doit-task-delete').attr('data-url',json.archive_url);
 			template_clone.find('.doit-has-description').remove();
 			template_clone.find('.doit-has-comment').remove();
@@ -259,6 +271,38 @@ function CreateTask(form){
 	});
 }
 // Edit task
+function GetModalContent(href){
+	$.ajax({
+		url: href,
+		type: 'GET',
+		success: function(content) {
+			$('#modal-get-content').html(content);
+			$('#modal-preloader').css('display', 'none');
+		},
+		error: function(xhr,errmsg,err) {
+			alert("Something went wrong!")
+			console.log(errmsg)
+			console.log(xhr.responseText);
+			$('body').html("<pre>" + xhr.responseText + "</pre>");
+		}
+	});
+}
+function SubmitFormAjax(form){
+	$.ajax({
+		url: $(form).attr('action'),
+		type: 'POST',
+		data: $(form).serialize(),
+		success: function(json) {
+			console.log('Edited');
+		},
+		error: function(xhr,errmsg,err) {
+			alert("Something went wrong!")
+			console.log(errmsg)
+			console.log(xhr.responseText);
+			$('body').html("<pre>" + xhr.responseText + "</pre>");
+		}
+	});
+}
 // Reorder task
 function ReorderListTask(slug,new_order){
 	$.ajax({
@@ -312,6 +356,8 @@ $(document).ready(function(){
 			console.log('test');
 			$('.quick_task_form #list_slug').val(slug);
 		}
+		$('#nav-mobile li').removeClass('active');
+		$(this).parent().addClass('active');
 		LoadTasksForList(slug);
 	});
 	// detect task clicked
@@ -320,15 +366,17 @@ $(document).ready(function(){
 		// display modal with data from ajax
 	});
 	// Get list tasks and activate tab
-	// Add list
-	$('#quick_list_form').on('submit', function(event){
+	$('body').on('submit', '.quick_task_form, .quick_list_form', function(event){
 	    event.preventDefault();
-	    CreateList(this)
-	});
-	// Add task
-	$('body').on('submit', '.quick_task_form', function(event){
-	    event.preventDefault();
-	    CreateTask(this);
+	    form = $(this);
+	    console.log(form.attr('class'));
+	    if(form.hasClass('quick_task_form')) {
+			// Add task
+	    	CreateTask(this);	
+	    } else if(form.hasClass('quick_list_form')) {
+			// Add list
+	    	CreateList(this);
+	    }
 	});
 	// Edit list
 	// Edit title
@@ -341,16 +389,21 @@ $(document).ready(function(){
 	// Assign task ( not sure yet )
 
 	// click task action buttons or delete list button
-	$('body').on('click', '.doit-task-status, .doit-task-delete, .list-btn.glyphicon-trash', function(event){
+	$('body').on('click', '.doit-task-status, .doit-task-edit, .doit-task-delete, .delete-list', function(event){
 	    event.preventDefault();
 	    link = $(this);
-	    if(link.hasClass('list-btn')){
+
+	    if(link.hasClass('delete-list')){
 	    	confirm_delete = confirm('Are you sure you want to delete this list?');
 	    	if(!confirm_delete){
 	    		return false;
 	    	}else{
 	    		DeleteList(link);
 	    	}
+	    }else if(link.hasClass('doit-task-edit')){
+	    	href = link.attr('href');
+	    	$('#modal-container').openModal();
+	    	GetModalContent(href);
 	    }else{
 	    	DoTaskAction(link);
 	    }

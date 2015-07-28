@@ -32,7 +32,7 @@ urlpatterns = [
     url(r'^todolist/reaorder/$', 'tasks.views.todo_ajax_reorder', name='todo_ajax_reorder'),
     # Task url
     url(r'^todo/create/$', 'tasks.views.task_create', name='task_create'),
-    url(r'^todo/(?P<task_slug>[\w-]+)/edit/$', 'tasks.views.task_edit', name='task_edit'),
+    url(r'^todo/(?P<task_slug>[\w-]+)/edit/$', 'tasks.views.edit_task', name='task_edit'),
     url(r'^todo/(?P<task_slug>[\w-]+)/done/$', 'tasks.views.task_done', name='task_done'),
     url(r'^todo/(?P<task_slug>[\w-]+)/undone/$', 'tasks.views.task_undone', name='task_undone'),
     url(r'^todo/(?P<task_slug>[\w-]+)/archive/$', 'tasks.views.task_archive', name='task_archive'),

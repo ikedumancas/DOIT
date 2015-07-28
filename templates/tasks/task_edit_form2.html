@@ -1,0 +1,55 @@
+{% load humanize %} 
+{% for input in form  %}
+
+{% endfor %}
+<form action="{{ request.get_full_path }}" method="POST" class="modal-form edit-task-form">
+	{% for input in form  %}
+		{% if input == form.order %}
+			<div class="row">
+				<div class="input-field">
+					<select id="id_order" name="order">
+					{% for order in list_orders %}
+						{% if input.value == order %}
+							<option value="{{ order }}" selected="selected">{{order|ordinal}}</option>
+						{% else %}
+							<option value="{{ order }}">{{order|ordinal}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+					<label for="id_order">Order:</label>
+				</div>
+			</div>
+		{% else %}
+			<div class="row">
+				<div class="input-field">
+				    {{ input }}
+				    {{ input.label_tag }}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	<input type="submit" value="Save" class="btn btn-primary btn-block">
+</form>
+<script>
+	new_content = $('.edit-task-form');
+	new_content.find('textarea').addClass('materialize-textarea');
+	new_content.find('input + label, textarea + label').addClass('active');
+	$('select').material_select();
+	$('#id_due_date').pickadate({
+		selectMonths: true,
+		selectYears: 15,
+		format: 'yyyy-mm-dd',
+		closeOnSelect: true,
+		container: 'body'
+	});
+	$('body').on('submit', '.edit-task-form', function(event){
+	    event.preventDefault();
+	    form = $(this);
+	    SubmitFormAjax(form);
+	    LoadTasksForList('{{parent_list_slug}}');
+	    $('#modal-preloader').css('display', '');
+	    $('.edit-task-form').css('display', 'none');
+	    $('.modal').closeModal()
+	    $('#modal-preloader').css('display', 'none');
+	});
+</script>
