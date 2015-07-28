@@ -164,9 +164,11 @@ function CreateList(form){
 		type: 'POST',
 		data: { title: new_list_title },
 		success: function(json) {
+			$(form).find('#add_list').val('');
 			$('#create_list_form_container').before('<li title="'+ json.title +'" class="bold no-padding">\
 						<a href="#'+ json.slug +'-list" class="waves-effect waves-teal doit-list-select">\
 						<i class="tiny material-icons teal-text">list</i> '+ json.title +'<span class="badge">0</span></a></li>');
+			$('a[href=#'+ json.slug +'-list]').click();
 		},
 		error: function(xhr,errmsg,err) {
 			alert("Something went wrong!")
