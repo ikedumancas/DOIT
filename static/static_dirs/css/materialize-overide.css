@@ -66,7 +66,6 @@ a.button-collapse.top-nav {
   left: 0;
   top: 0;
   float: none;
-  margin-left: 1.5rem;
   color: #fff;
   font-size: 32px;
   z-index: 2; }
@@ -85,7 +84,7 @@ a.button-collapse.top-nav {
 
 @media only screen and (max-width : 992px) {
   nav .nav-wrapper {
-    padding-left:20%; }
+    padding: 0 50px; }
     nav .nav-wrapper a.page-title {
       font-size: 36px; } }
 

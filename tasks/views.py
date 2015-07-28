@@ -63,7 +63,6 @@ def get_list_tasks(request):
 				todos = []
 				if slug == "today":
 					taskslist = Todo.objects.due_today().filter(todolist__users=request.user).order_by('todolist')
-					print taskslist
 					todos.extend(taskslist)
 				elif slug == "in7days":
 					taskslist = Todo.objects.due_in_seven().filter(todolist__users=request.user)
@@ -178,7 +177,6 @@ def list_edit(request,list_slug):
 	add_user_form = AddUserToListForm(request.POST or None)
 	if request.method == 'POST':
 		submit = request.POST.get('submit')
-		print submit
 		if todolistForm.is_valid() and submit == 'Save Title' and request.POST.get('username') == '' :
 			todolist.title = todolistForm.cleaned_data['title']
 			todolist.save()
@@ -250,7 +248,6 @@ def task_create(request):
 			else:
 				form = TaskForm(request.POST or None)
 				if form.is_valid():
-					print form.cleaned_data
 					task_title = form.cleaned_data['title']
 					list_slug = form.cleaned_data['todolist']
 					new_list = Todo.objects.create_todo(user=request.user, title=task_title, list_slug=list_slug)

@@ -16,7 +16,7 @@
 			<div class="nav-wrapper"><a class="page-title truncate">Today</a></div>
 		</nav>
 		<div class="container">
-			<a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only">
+			<a href="#" data-activates="nav-mobile" class="button-collapse top-nav right full hide-on-large-only">
 				<i class="mdi-navigation-menu"></i>
 			</a>
 		</div>
@@ -40,8 +40,8 @@
 				</div>
 				<p>Loading lists</p>
 			</div>
-			<li class="no-hover-effect">
-				<form>
+			<li class="no-hover-effect" id="create_list_form_container">
+				<form action="{% url 'list_create' %}" method="POST" id="quick_list_form">
 					<div class="doit-input-field">
 						<input id="add_list" type="text" placeholder="Add another list..." required />
 						<small class="doit-input-helper-text">* Press [Enter] to create</small>
@@ -54,9 +54,21 @@
 		<div class="row">
 			<div class="col s12">
 				<div class="row">
-					<div class="col s12 m6" id="doit-container"></div>
+					<div class="col s12 m6">
+						<div id="doit-container">
+							
+						</div>
+						<form action="{% url 'task_create' %}" method="POST" class='quick_task_form' css="display:none;">
+							<div class="doit-input-field">
+								<input id="add_task" type="text" placeholder="Add task..." required />
+								<small class="doit-input-helper-text">* Press [Enter] to create</small>
+							</div>
+							<input type="hidden" name="todolist" id="list_slug" value="" />
+						</form>
+					</div>
 					<div class="card" id="doit-template" style="display:none">
 						<div class="card-content">
+							<i class="material-icons right small swap-controller">swap_vert</i>
 							<p class="doit-title"></p>
 							<i class="tiny material-icons doit-has-description" title="This task has a description.">description</i>
 							<span class="doit-has-comment">
